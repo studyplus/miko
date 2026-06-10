@@ -86,8 +86,8 @@ miko に関するあらゆるご質問にお答えする。
      - proposal ができたら `/miko.harae <capability> <proposal>` でルール検証をお勧めする（指摘は proposal 内に記録される）
      - 変更が大きい場合や他ケイパビリティへの横断影響がある場合は `/miko.split_proposal` で親（umbrella）+ サブにフェーズ分割できる（harae の後に実施。横断影響がある場合は影響先ケイパビリティにサブ proposal が作られる。DB マイグレーションや環境変更の分離にも有効）
    - **実装フェーズ**（proposal に基づいて実装する。分割した場合は各サブ proposal に対して実行）:
-     - 変更が大きそう → フルフロー（`/miko.speckit.specify` から）をお勧め
-     - 変更が小さそう → `/miko.quick_impl` をお勧め
+     - 基本は `/miko.quick_impl` をお勧め（speckit を通さず直接実装）
+     - 重い変更（複数の意図が絡む、影響範囲の見極めに探索が要る、処理構造が大きく動く）→ フルフロー（`/miko.speckit.specify` から）をお勧め
      - 判断がつかない → まず proposal で整理し、規模を見てからご案内
    - 実装完了時に business_rules.md + high_level_design.md + harae.md が自動更新される
 
@@ -105,8 +105,8 @@ miko に関するあらゆるご質問にお答えする。
 5. **propose は済んでいて、実装フェーズに進みたい**
    - harae が未実施で重要な変更 → `/miko.harae <capability> <proposal>` で検証してから実装フェーズへ
    - 変更が大きい、または横断影響がある → `/miko.split_proposal` で分割してから各サブ proposal に対して実装
-   - フルフロー → `/miko.speckit.specify` から
-   - 小規模 → `/miko.quick_impl` で直接
+   - 基本 → `/miko.quick_impl` で直接
+   - 重い変更 → フルフロー（`/miko.speckit.specify` から）
    - いずれも実装完了時に harae.md への転記を含むドキュメント更新が自動で行われる
 
 6. **実装フェーズの途中から再開したい**
@@ -121,7 +121,7 @@ miko に関するあらゆるご質問にお答えする。
    - BR の変更は直接編集ではなく、必ず `/miko.propose` でプロポーザルを作成してから行う
    - 対話の中で「このルールが足りない」「このルールは実態と違う」と判明した場合も同様
    - 例: 「BR をチェックして → 不足を発見 → `/miko.propose` で変更提案を作りましょう」
-   - 実装も必要なら、proposal 作成後にパターン3の流れ（specify → plan → ... → implement）に進む
+   - 実装も必要なら、proposal 作成後にパターン3の実装フェーズ（基本は quick_impl、重い変更は speckit フロー）に進む
 
 ---
 
@@ -200,7 +200,7 @@ miko の実装フローでは **constitution**（`.specify/memory/constitution.m
 
 **対話の中で BR の不足・誤り・変更の必要性が判明した場合、直接 BR を編集する提案をしてはいけない。** 必ず `/miko.propose` でプロポーザルを作成するフローに誘導する。
 
-これは BR チェックの依頼に限らない。どのような入力・対話であっても、結果として「BR を変えるべき」と判明したら `/miko.propose` → 必要に応じて実装フロー（`/miko.speckit.specify` → `/miko.speckit.plan` → ...）の順で進める。
+これは BR チェックの依頼に限らない。どのような入力・対話であっても、結果として「BR を変えるべき」と判明したら `/miko.propose` → 必要に応じて実装フロー（基本は `/miko.quick_impl`、重い変更は `/miko.speckit.specify` → `/miko.speckit.plan` → ...）の順で進める。
 
 **悪い例:**
 > 「このルールが BR に不足しています。追加いたしましょうか？」
