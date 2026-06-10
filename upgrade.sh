@@ -7,19 +7,34 @@ SKILLS_DIR=".claude/skills"
 VERSION_FILE=".miko/VERSION"
 OLD_VERSION_FILE="$SKILLS_DIR/_miko/VERSION"
 
+# 言語設定: .miko/config の language (ja/en) を読む。なければ ja
+LANG_CHOICE="ja"
+if [ -f ".miko/config" ]; then
+  LANG_CHOICE=$(grep -E '^language=' .miko/config | head -n 1 | cut -d= -f2 | tr -d '[:space:]')
+  [ "$LANG_CHOICE" = "en" ] || LANG_CHOICE="ja"
+fi
+
+# say <ja> <en> — 言語設定に応じたメッセージを出力する
+say() {
+  if [ "$LANG_CHOICE" = "en" ]; then echo "$2"; else echo "$1"; fi
+}
+
 if [ ! -d ".claude" ]; then
-  echo "⛩️  .claude ディレクトリが見つかりません。プロジェクトのルートで実行くださいませ。"
+  say "⛩️  .claude ディレクトリが見つかりません。プロジェクトのルートで実行くださいませ。" \
+      "⛩️  .claude directory not found. Please run this from your project root."
   exit 1
 fi
 
 if ! command -v claude &> /dev/null; then
-  echo "⛩️  claude (Claude CLI) が必要です。https://claude.com/claude-code からインストールくださいませ。"
+  say "⛩️  claude (Claude CLI) が必要です。https://claude.com/claude-code からインストールくださいませ。" \
+      "⛩️  claude (Claude CLI) is required. Please install it from https://claude.com/claude-code."
   exit 1
 fi
 
 # miko がインストールされているか確認（VERSION ファイルまたは miko スキルの存在）
 if [ ! -f "$VERSION_FILE" ] && [ ! -f "$OLD_VERSION_FILE" ] && ! ls -d "$SKILLS_DIR"/miko.* &> /dev/null; then
-  echo "⛩️  miko がインストールされていません。install.sh で初回インストールをお願いいたします。"
+  say "⛩️  miko がインストールされていません。install.sh で初回インストールをお願いいたします。" \
+      "⛩️  miko is not installed. Please run install.sh for the initial installation."
   exit 1
 fi
 
@@ -33,12 +48,18 @@ elif [ -f "$OLD_VERSION_FILE" ]; then
   current_semver=$(sed -n '1p' "$OLD_VERSION_FILE" | tr -d '[:space:]')
   current_ts=$(sed -n '2p' "$OLD_VERSION_FILE" | tr -d '[:space:]')
 fi
-current_semver="${current_semver:-不明}"
+if [ "$LANG_CHOICE" = "en" ]; then
+  current_semver="${current_semver:-unknown}"
+else
+  current_semver="${current_semver:-不明}"
+fi
 current_ts="${current_ts:-0}"
 
-echo "⛩️  現在のバージョン: $current_semver ($current_ts)"
+say "⛩️  現在のバージョン: $current_semver ($current_ts)" \
+    "⛩️  Current version: $current_semver ($current_ts)"
 
-echo "🌿 最新版を取得しております..."
+say "🌿 最新版を取得しております..." \
+    "🌿 Fetching the latest version..."
 tmpdir=$(mktemp -d)
 trap 'rm -rf "$tmpdir"' EXIT
 
@@ -49,11 +70,13 @@ latest_semver=$(sed -n '1p' "$tmpdir/miko/ofuda/VERSION" | tr -d '[:space:]')
 latest_ts=$(sed -n '2p' "$tmpdir/miko/ofuda/VERSION" | tr -d '[:space:]')
 
 if [ "$current_ts" = "$latest_ts" ]; then
-  echo "✨ 既に最新バージョン ($latest_semver) です。"
+  say "✨ 既に最新バージョン ($latest_semver) です。" \
+      "✨ Already on the latest version ($latest_semver)."
   exit 0
 fi
 
-echo "🌿 $current_semver → $latest_semver へ更新いたします"
+say "🌿 $current_semver → $latest_semver へ更新いたします" \
+    "🌿 Updating $current_semver → $latest_semver"
 
 # 現在のタイムスタンプより大きいマイグレーションを昇順で収集
 migrations_dir="$tmpdir/miko/migrations"
@@ -71,25 +94,30 @@ fi
 # マイグレーション実行
 if [ ${#migration_files[@]} -gt 0 ]; then
   echo ""
-  echo "📜 マイグレーションを実行いたします（${#migration_files[@]} 件）..."
-  echo "   ※ マイグレーションは1件あたり数分かかることがございます。しばらくお待ちくださいませ。"
+  say "📜 マイグレーションを実行いたします（${#migration_files[@]} 件）..." \
+      "📜 Running migrations (${#migration_files[@]})..."
+  say "   ※ マイグレーションは1件あたり数分かかることがございます。しばらくお待ちくださいませ。" \
+      "   Note: each migration may take a few minutes. Please wait."
   for f in "${migration_files[@]}"; do
     ts=$(basename "$f" .md)
     echo "  ⛩️  $ts ..."
     # $MIKO_LATEST をマイグレーションプロンプト内のパス参照用に展開する
     prompt=$(cat "$f" | sed "s|\$MIKO_LATEST|$tmpdir/miko|g")
     if ! claude -p "$prompt" --allowedTools "Edit,Read,Write,Glob,Grep"; then
-      echo "  ❌ $ts でエラーが発生しました。中断いたします。"
+      say "  ❌ $ts でエラーが発生しました。中断いたします。" \
+          "  ❌ Migration $ts failed. Aborting."
       exit 1
     fi
-    echo "  ✨ $ts 完了"
+    say "  ✨ $ts 完了" \
+        "  ✨ $ts done"
   done
   echo ""
 fi
 
 # 旧ディレクトリの削除（v0.2.x 以前からの移行）
 if [ -d "$SKILLS_DIR/_miko" ]; then
-  echo "🌿 旧ディレクトリ $SKILLS_DIR/_miko を削除しております..."
+  say "🌿 旧ディレクトリ $SKILLS_DIR/_miko を削除しております..." \
+      "🌿 Removing the legacy directory $SKILLS_DIR/_miko..."
   rm -rf "$SKILLS_DIR/_miko"
 fi
 
@@ -113,7 +141,8 @@ fi
 
 if [ ${#protected_skills[@]} -gt 0 ]; then
   echo ""
-  echo "🔒 以下のスキルはプロテクト済みのため、更新対象から除外いたします:"
+  say "🔒 以下のスキルはプロテクト済みのため、更新対象から除外いたします:" \
+      "🔒 The following skills are protected and will be excluded from the update:"
   for s in "${protected_skills[@]}"; do
     echo "    - $SKILLS_DIR/$s"
   done
@@ -144,23 +173,29 @@ done
 # 削除されるスキルがあれば一覧表示して確認
 if [ ${#removed_skills[@]} -gt 0 ]; then
   echo ""
-  echo "🗑️  以下のスキルは最新版にないため削除されます:"
+  say "🗑️  以下のスキルは最新版にないため削除されます:" \
+      "🗑️  The following skills are not in the latest version and will be removed:"
   for s in "${removed_skills[@]}"; do
     echo "    - $SKILLS_DIR/$s"
   done
   echo ""
-  read -r -p "続行してよろしいですか? [y/N]: " ans
+  if [ "$LANG_CHOICE" = "en" ]; then
+    read -r -p "Continue? [y/N]: " ans
+  else
+    read -r -p "続行してよろしいですか? [y/N]: " ans
+  fi
   case "$ans" in
     y|Y|yes|YES) ;;
     *)
-      echo "中断いたしました。"
+      say "中断いたしました。" "Aborted."
       exit 1
       ;;
   esac
 fi
 
 # スキルファイル更新
-echo "🌿 スキルファイルを更新しております..."
+say "🌿 スキルファイルを更新しております..." \
+    "🌿 Updating skill files..."
 
 # 削除が確定したスキルを個別に削除
 for s in "${removed_skills[@]}"; do
@@ -170,16 +205,27 @@ done
 # miko 管理スキルを個別に更新（プロテクト済みはスキップ）
 for s in "${latest_skills[@]}"; do
   if is_protected "$s"; then
-    echo "  🔒 $s はプロテクト済みのためスキップいたします"
+    say "  🔒 $s はプロテクト済みのためスキップいたします" \
+        "  🔒 $s is protected — skipping"
     continue
   fi
   rm -rf "${SKILLS_DIR:?}/$s"
   cp -r "$tmpdir/miko/skills/$s" "$SKILLS_DIR/"
 done
 
-# .miko/ を更新: ユーザー作成ファイル（protected_skills 等）を保持したまま上書き
+# .miko/ を更新: ユーザー作成ファイル（protected_skills, config 等）を保持したまま上書き
 # rm -rf は使わず、ofuda の中身を .miko/ にマージコピーする
 cp -r "$tmpdir/miko/ofuda/." .miko/
 
+# 言語設定に応じて tone_guide を解決する（config がない既存インストールは ja として config を作成）
+if [ ! -f ".miko/config" ]; then
+  echo "language=$LANG_CHOICE" > .miko/config
+fi
+if [ "$LANG_CHOICE" = "en" ] && [ -f ".miko/guides/tone_guide.en.md" ]; then
+  cp .miko/guides/tone_guide.en.md .miko/guides/tone_guide.md
+fi
+rm -f .miko/guides/tone_guide.en.md
+
 echo ""
-echo "✨ miko を $latest_semver ($latest_ts) に更新いたしました"
+say "✨ miko を $latest_semver ($latest_ts) に更新いたしました" \
+    "✨ miko has been updated to $latest_semver ($latest_ts)"

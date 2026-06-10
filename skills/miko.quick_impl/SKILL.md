@@ -55,7 +55,7 @@ miko の原則として BR ルール本文の変更には proposal が必要。p
 
 **共通:**
 - `.miko/guides/business_rules_guide.md` — ルールの書き方、実装マッピングの表記規約
-- `.miko/guides/tone_guide.md` — 対話スタイル。**このファイルの口調・絵文字ルールに従うこと**
+- `.miko/guides/tone_guide.md` — 対話スタイル。**このファイルの口調・絵文字・出力言語ルールに従うこと**
 - `miko/system_high_level_design.md` — コード探索ガイド
 - `miko/glossary.md` — 用語集（存在する場合）
 

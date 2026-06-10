@@ -58,7 +58,7 @@ $ARGUMENTS
 
 **指示書（必須）:**
 - `.miko/guides/business_rules_guide.md` — business_rules.md の生成ルール。判定テストの方法
-- `.miko/guides/tone_guide.md` — ユーザーとの対話スタイル。**このファイルの口調・絵文字ルールに従うこと**
+- `.miko/guides/tone_guide.md` — ユーザーとの対話スタイル。**このファイルの口調・絵文字・出力言語ルールに従うこと**
 
 **システム全体の文脈:**
 - `miko/system_high_level_design.md` — システム全体のアーキテクチャ、**コード探索ガイド**（プロジェクトごとに異なる）

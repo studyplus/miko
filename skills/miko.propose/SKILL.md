@@ -42,7 +42,7 @@ $ARGUMENTS
 
 **指示書（必須）:**
 - `.miko/guides/business_rules_guide.md` — ルール記述の原則。判定テストの方法
-- `.miko/guides/tone_guide.md` — ユーザーとの対話スタイル。**このファイルの口調・絵文字ルールに従うこと**
+- `.miko/guides/tone_guide.md` — ユーザーとの対話スタイル。**このファイルの口調・絵文字・出力言語ルールに従うこと**
 
 **実例（品質の基準）:**
 - `.miko/examples/business_rules.md` — ルールの書き方・粒度の参考

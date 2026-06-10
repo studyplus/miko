@@ -51,7 +51,7 @@ $ARGUMENTS
 
 ### 1. 資料の読み込み
 
-- `.miko/guides/tone_guide.md` — 対話スタイル。**このファイルの口調・絵文字ルールに従うこと**
+- `.miko/guides/tone_guide.md` — 対話スタイル。**このファイルの口調・絵文字・出力言語ルールに従うこと**
 - `.miko/guides/harae_format_guide.md` — harae.md のフォーマットとステータス管理ルール
 - `miko/<capability>/business_rules.md` — **存在しない場合はエラー:**
   > ⛩️  `miko/<capability>/business_rules.md` が見つかりません。

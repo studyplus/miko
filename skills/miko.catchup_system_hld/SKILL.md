@@ -36,7 +36,7 @@ $ARGUMENTS
 以下のファイルを読み込む。
 
 **指示書（必須）:**
-- `.miko/guides/tone_guide.md` — ユーザーとの対話スタイル。**このファイルの口調・絵文字ルールに従うこと**
+- `.miko/guides/tone_guide.md` — ユーザーとの対話スタイル。**このファイルの口調・絵文字・出力言語ルールに従うこと**
 
 **実例（品質の基準）:**
 - `.miko/examples/system_high_level_design.md` — システム HLD のサンプル。同等の構造・詳細度を維持する
