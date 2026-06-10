@@ -50,7 +50,7 @@ $ARGUMENTS
 - スキップする場合はそのまま次に進む
 
 **読み込むファイル:**
-- `.miko/guides/tone_guide.md` — 対話スタイル。**このファイルの口調・絵文字ルールに従うこと**
+- `.miko/guides/tone_guide.md` — 対話スタイル。**このファイルの口調・絵文字・出力言語ルールに従うこと**
 - `.claude/skills/miko.split_proposal/examples/umbrella_proposal.md` — 親プロポーザルのサンプル
 - `.claude/skills/miko.split_proposal/examples/cross_capability_sub_proposal.md` — 横断サブプロポーザルのサンプル（横断分割の場合）
 - 指定されたプロポーザルファイル

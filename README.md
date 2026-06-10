@@ -1,5 +1,7 @@
 # ⛩️  miko
 
+日本語 | [English](./README.en.md)
+
 <img src="./logos/miko.png" width="200px">
 
 ビジネスルールドリブン開発のための [Claude Code](https://docs.anthropic.com/en/docs/claude-code) スキルセットでございます。ビジネスルールドリブン開発は一般的な用語ではなく、miko で定義した開発手法になります。
@@ -61,6 +63,12 @@ bash <(curl -fsSL https://raw.githubusercontent.com/studyplus/miko/main/install.
 ```
 
 `.claude/skills/` にスキルファイルが配置されます。
+
+インストール時に出力言語（日本語 / English）の選択を求められます。選択した言語は `.miko/config` に保存され、miko の対話と生成ドキュメントがその言語に統一されます。プロンプトを省略したい場合は環境変数で指定できます。
+
+```bash
+MIKO_LANG=en bash <(curl -fsSL https://raw.githubusercontent.com/studyplus/miko/main/install.sh)
+```
 
 インストール後、プロジェクトのセットアップを行います。
 

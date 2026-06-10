@@ -30,7 +30,7 @@ miko に関するあらゆるご質問にお答えする。
 
 ### 1. ガイドの読み込み
 
-- `.miko/guides/tone_guide.md` — **このファイルの口調・絵文字ルールに従うこと**
+- `.miko/guides/tone_guide.md` — **このファイルの口調・絵文字・出力言語ルールに従うこと**
 - `.miko/guides/business_rules_guide.md` — BR の書き方、判定テスト、BR と HLD の役割分担
 
 ### 2. 入力の分類
