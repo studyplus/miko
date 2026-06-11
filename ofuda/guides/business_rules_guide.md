@@ -66,7 +66,11 @@
    /miko.harae <capability> <proposal>
    → proposal 適用後のルール体系を攻撃的に検証。指摘は proposal 内に記録される
 
-3. speckit で仕様策定・実装
+3. 実装する
+   基本: /miko.quick_impl <capability | proposal>
+   → speckit を通さず直接実装（単一の意図・既存構造の範囲内の変更が対象）
+
+   重い変更（複数の意図が絡む、影響範囲の見極めに探索が要る、処理構造が大きく動く）は speckit フロー:
    /miko.speckit.specify → /miko.speckit.clarify → /miko.speckit.plan → /miko.speckit.tasks → /miko.speckit.analyze → /miko.speckit.implement
    → speckit の成果物は使い捨て。Claude に深く調査させるための道具
    → 大きな変更はフェーズ分割可能（親 proposal + サブ proposal）。各サブ proposal に対して実行する
@@ -84,7 +88,7 @@
 ```
 proposal（人が元ネタを出し、AI と相談しながら書く）
     ↓
-speckit（AI が使い捨て仕様を作って実装）
+実装（基本は quick_impl で直接実装。重い変更は speckit が使い捨て仕様を作って実装）
     ↓
 business_rules.md（AI が更新：ドメインの判断基準）
 high_level_design.md（AI が更新：構造の変化）

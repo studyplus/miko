@@ -46,13 +46,13 @@ Organizing by capability gathers related business rules in one place, which make
 
 ### Other design decisions
 
-- **speckit is a surveying tool** — speckit artifacts are disposable. We use speckit as a device to make Claude read the codebase deeply
+- **speckit is a surveying tool** — speckit artifacts are disposable. For heavy changes, we use speckit as a device to make Claude read the codebase deeply. Day-to-day implementation goes through `/miko.quick_impl`, without speckit
 - **Division of labor between documents** — the rules themselves (conclusions) go in `business_rules.md`; why they were decided (history) goes in proposals
 
 ## 🌿 Prerequisites
 
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) is installed
-- The [speckit](https://github.com/github/spec-kit) skills are installed (miko works by extending speckit)
+- (Optional) The [speckit](https://github.com/github/spec-kit) skills — needed only if you use the full flow (`/miko.speckit.*`). Not required for the standard `/miko.quick_impl` flow
 
 ## ✨ Installation
 
@@ -162,7 +162,15 @@ miko/
 | `/miko.new_harae <capability>` | First adversarial verification of the business rules. Generates harae.md from scratch |
 | `/miko.harae <capability> [proposal]` | Reviews and extends an existing harae.md. With a proposal, records the findings inside the proposal |
 
-### Implementation (speckit extensions)
+### Implementation (standard flow)
+
+| Skill | Purpose |
+|---|---|
+| `/miko.quick_impl <proposal \| capability \| change instruction>` | The standard flow: implements changes directly, without speckit. Accepts change instructions without a proposal (refactoring, etc.). Changes to BR text require a proposal. Heavy changes beyond its scope are routed to the full flow |
+
+### Implementation (full flow — speckit extensions, for heavy changes)
+
+Available only when speckit is installed.
 
 | Skill | Purpose |
 |---|---|
@@ -172,7 +180,6 @@ miko/
 | `/miko.speckit.tasks [feature_dir]` | Generates a task list in vertical-slice order. Argument optional |
 | `/miko.speckit.analyze` | Consistency check across documents (optional) |
 | `/miko.speckit.implement [feature_dir]` | Implements with per-phase checkpoints + self-review. Argument optional |
-| `/miko.quick_impl <proposal \| capability \| change instruction>` | Implements small changes directly, skipping speckit. Accepts change instructions without a proposal (refactoring, etc.). Changes to BR text require a proposal |
 
 ## 🌿 Development flow
 
@@ -195,7 +202,7 @@ miko/
 → After fixing the findings, re-verification with /miko.harae <capability> is recommended
 ```
 
-### Changing an existing capability (full flow)
+### Changing an existing capability
 
 **Proposal phase** (build team consensus)
 
@@ -206,18 +213,31 @@ miko/
 /miko.harae <capability> <proposal>
   → Adversarially verifies the rule set as it would be after the proposal. Findings are recorded in the proposal
 
+# Optional
 /miko.split_proposal <proposal>
-  → For large changes, splits into umbrella (parent) + subs by phase (optional)
+  → For large changes only, splits into umbrella (parent) + subs by phase
 ```
 
-**Implementation phase** (implement based on the proposal; if split, run for each sub-proposal)
+**Implementation phase (standard: quick_impl)**
+
+```
+/miko.quick_impl <capability>
+  → Implements directly, without speckit (for single-intent changes within the existing structure)
+  → Afterwards, business_rules.md + high_level_design.md + harae.md are updated automatically
+  → If the change exceeds this scope, you are guided to the full flow
+```
+
+**Implementation phase (full flow: speckit — for heavy changes)**
+
+When a change involves multiple intents, requires exploration to pin down its impact, or moves the processing structure significantly, proceed with the speckit flow. If the proposal was split, run it for each sub-proposal.
 
 ```
 /miko.speckit.specify <capability>
   → Generates spec.md
 
+# Optional
 /miko.speckit.clarify
-  -> Optional. Clarifies open questions
+  → Clarifies open questions
 
 /miko.speckit.plan
   → Implementation plan + test design
@@ -225,33 +245,13 @@ miko/
 /miko.speckit.tasks
   → Generates the task list
 
+# Optional
 /miko.speckit.analyze
-  -> Optional. Final pre-implementation check
+  → Final pre-implementation check
 
 /miko.speckit.implement
   → Implements (self-review + /simplify per feature)
   → After the final phase, business_rules.md + high_level_design.md + harae.md are updated automatically
-```
-
-### Changing an existing capability (small changes)
-
-**Proposal phase**
-
-```
-/miko.propose <capability> <raw material>
-  → Creates the proposal
-
-/miko.harae <capability> <proposal>
-  → Adversarially verifies the rule set as it would be after the proposal. Findings are recorded in the proposal
-```
-
-**Implementation phase**
-
-```
-/miko.quick_impl <capability>
-  → Implements directly, skipping speckit (for single-intent changes within the existing structure)
-  → Afterwards, business_rules.md + high_level_design.md + harae.md are updated automatically
-  → If the change exceeds this scope, you are guided to the full flow
 ```
 
 ### Refactoring without a proposal
@@ -286,9 +286,9 @@ Changes that do not alter business-rule text (renames, moves, redistributing res
 
 ## 🌾 Quality improvement during implementation
 
-`/miko.speckit.implement` automatically runs the following self-reviews per feature:
+`/miko.quick_impl` (after implementing) and `/miko.speckit.implement` (per feature) automatically run the following self-reviews:
 
 1. **Self-review** -- checks responsibility placement, naming, and framework conventions
 2. **/simplify** -- checks for duplication, quality, and efficiency
 
-In the final phase it performs cross-feature refactoring.
+`/miko.speckit.implement` additionally performs cross-feature refactoring in its final phase.
