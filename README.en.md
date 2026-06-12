@@ -204,18 +204,24 @@ Available only when speckit is installed.
 
 ### Changing an existing capability
 
-**Proposal phase** (build team consensus)
+Proceed in three stages: **Propose → Verify → Implement.** Propose gathers the change, Verify (harae) adversarially tests the rule set, and Implement applies it.
+
+**Proposal phase**
 
 ```
 /miko.propose <capability> <raw material>
   → Creates the proposal
+```
 
+**Verification phase** (adversarially verify the rule set with harae)
+
+```
 /miko.harae <capability> <proposal>
   → Adversarially verifies the rule set as it would be after the proposal. Findings are recorded in the proposal
 
 # Optional
 /miko.split_proposal <proposal>
-  → For large changes only, splits into umbrella (parent) + subs by phase
+  → For large changes only, splits into umbrella (parent) + subs by phase (run after harae)
 ```
 
 **Implementation phase (standard: quick_impl)**
