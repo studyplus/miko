@@ -204,18 +204,24 @@ speckit がインストールされている場合のみ使えます。
 
 ### 既存ケイパビリティへの変更
 
-**プロポーザルフェーズ**（チームで合意を取る）
+**提案 → 検証 → 実装** の三段でお進みいたします。提案で変更をまとめ、検証（harae）でルール体系を攻撃的に確かめ、実装で反映いたします。
+
+**提案フェーズ**
 
 ```
 /miko.propose <capability> <元ネタ>
   → プロポーザル作成
+```
 
+**検証フェーズ**（harae でルール体系を攻撃的に検証する）
+
+```
 /miko.harae <capability> <proposal>
   → proposal 適用後のルール体系を攻撃的に検証。指摘は proposal 内に記録
 
 # Optional
 /miko.split_proposal <proposal>
-  → 変更が大きい場合のみ、親（umbrella）+ サブにフェーズ分割
+  → 変更が大きい場合のみ、親（umbrella）+ サブにフェーズ分割（harae の後に実施）
 ```
 
 **実装フェーズ（基本: quick_impl）**
