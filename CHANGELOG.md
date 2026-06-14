@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.1.1 (2026-06-14)
+
+### Changed
+
+- **proposal 受け付けスキルのケイパビリティ名指定を廃止** — `miko.quick_impl` / `miko.split_proposal` / `miko.speckit.specify` でケイパビリティ名だけを渡したときに最新プロポーザルを自動選択する挙動を削除。プロポーザルファイルのパス直接指定のみに統一した
+
 ## v1.1.0 (2026-06-10)
 
 ### New
