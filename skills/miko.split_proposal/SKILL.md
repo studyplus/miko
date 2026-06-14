@@ -8,10 +8,10 @@ description: 既存のプロポーザルを親（umbrella）+ サブプロポー
 $ARGUMENTS
 ```
 
-入力の形式: `<proposal_path>` または `<capability_name>`
+入力の形式: `<proposal_path>`
 
 - 例: `/miko.split_proposal miko/order_management/proposals/2026-03-18-cancel-notify.md`
-- 空の場合はエラー: 「⛩️  プロポーザルのパスまたはケイパビリティ名をお願いいたします（例: `/miko.split_proposal order_management`）」
+- 空の場合はエラー: 「⛩️  プロポーザルのパスをお願いいたします（例: `/miko.split_proposal miko/order_management/proposals/2026-03-18-cancel-notify.md`）」
 
 ---
 
@@ -37,8 +37,7 @@ $ARGUMENTS
 ### 1. 入力検証・資料読み込み
 
 **入力検証:**
-- `$ARGUMENTS` がファイルパス（`miko/` で始まる or `.md` で終わる）の場合、そのパスをプロポーザルとして使用。パスからケイパビリティ名を抽出
-- ケイパビリティ名の場合、スネークケースに正規化し、`miko/<capability>/proposals/` 内の最新ファイルを自動選択
+- `$ARGUMENTS` をプロポーザルのパスとして使用。パスからケイパビリティ名を抽出
 - 選択されたプロポーザルの先頭に `<umbrella-proposal>` マーカーがある場合、既に親プロポーザルである。エラーとして中止する:
   > ⛩️  このプロポーザルは既に親プロポーザル（umbrella proposal）です。サブプロポーザルの追加・修正が必要な場合はお知らせください。
 - 選択されたプロポーザルの先頭に `<sub-proposal@{親のmiko相対パス}>` マーカーがある場合、既にサブプロポーザルである。エラーとして中止する:

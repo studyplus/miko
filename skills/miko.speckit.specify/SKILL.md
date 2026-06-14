@@ -16,12 +16,11 @@ handoffs:
 $ARGUMENTS
 ```
 
-入力の形式: `<proposal_path>` または `<capability_name>` または `<proposal_path1> <proposal_path2> ...`（複数パス、スペース区切り）
+入力の形式: `<proposal_path>` または `<proposal_path1> <proposal_path2> ...`（複数パス、スペース区切り）
 
 - 例: `/miko.speckit.specify miko/order_management/proposals/2026-02-21-trial-expiry-notification.md`（パスからケイパビリティ名を自動取得）
-- 例: `/miko.speckit.specify order_management`（最新のプロポーザルを自動選択）
 - 例（クロスケイパビリティ）: `/miko.speckit.specify miko/order_management/proposals/2026-03-18-cancel-notify-phase1.md miko/notification/proposals/2026-03-18-cancel-notify-phase1.md`（同じ親の複数サブを統合 spec として処理）
-- 空の場合はエラー: 「⛩️  プロポーザルのパスまたはケイパビリティ名をお願いいたします（例: `/miko.speckit.specify order_management`）」
+- 空の場合はエラー: 「⛩️  プロポーザルのパスをお願いいたします（例: `/miko.speckit.specify miko/order_management/proposals/2026-02-21-trial-expiry-notification.md`）」
 
 ---
 
@@ -53,9 +52,6 @@ Miko プロポーザルの「機能仕様」セクションを speckit の speci
 - `$ARGUMENTS` が単一のファイルパス（`miko/` で始まる or `.md` で終わる）の場合:
   - そのパスをプロポーザルとして使用
   - パスからケイパビリティ名を抽出（`miko/<capability>/proposals/...` の `<capability>` 部分）
-- `$ARGUMENTS` がケイパビリティ名の場合:
-  - スネークケースに正規化する
-  - `miko/<capability>/proposals/` 内の最新ファイル（日付順）を自動選択する
 
 **親プロポーザル（umbrella proposal）の検出:**
 - 選択されたプロポーザルの先頭に `<umbrella-proposal>` マーカーがある場合、エラーとして中止する:

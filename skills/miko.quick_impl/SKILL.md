@@ -11,9 +11,8 @@ $ARGUMENTS
 入力の形式: 以下のいずれか
 
 - proposal のパス（例: `/miko.quick_impl miko/order_management/proposals/2026-03-01-fix-trial-grace-period.md`）
-- ケイパビリティ名（例: `/miko.quick_impl order_management` — 最新の proposal を自動選択）
 - 変更指示の自由記述（例: `/miko.quick_impl OrderService を OrderFacade にリネーム`）
-- 空の場合はエラー: 「⛩️  proposal のパス、ケイパビリティ名、または変更指示をお願いいたします（例: `/miko.quick_impl order_management`）」
+- 空の場合はエラー: 「⛩️  proposal のパスまたは変更指示をお願いいたします（例: `/miko.quick_impl miko/order_management/proposals/2026-03-01-fix-trial-grace-period.md`）」
 
 ---
 
@@ -40,8 +39,7 @@ miko の原則として BR ルール本文の変更には proposal が必要。p
 `$ARGUMENTS` を以下のルールで解決する:
 
 - `miko/` で始まり `.md` で終わるパス → そのパスを proposal として使用。パスから cap 名を抽出
-- snake_case の単一トークンで `miko/<name>/` ディレクトリが存在 → `miko/<name>/proposals/` 内の最新ファイルを proposal として使用
-- 上記いずれにも該当しない → `$ARGUMENTS` を変更指示として扱う（proposal なし）
+- 上記に該当しない → `$ARGUMENTS` を変更指示として扱う（proposal なし）
 
 **proposal があった場合の追加検査:**
 
