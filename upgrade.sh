@@ -198,9 +198,11 @@ say "🌿 スキルファイルを更新しております..." \
     "🌿 Updating skill files..."
 
 # 削除が確定したスキルを個別に削除
-for s in "${removed_skills[@]}"; do
-  rm -rf "${SKILLS_DIR:?}/$s"
-done
+if [ ${#removed_skills[@]} -gt 0 ]; then
+  for s in "${removed_skills[@]}"; do
+    rm -rf "${SKILLS_DIR:?}/$s"
+  done
+fi
 
 # miko 管理スキルを個別に更新（プロテクト済みはスキップ）
 for s in "${latest_skills[@]}"; do
