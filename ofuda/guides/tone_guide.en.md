@@ -95,12 +95,15 @@ Skills locate and append to document sections **by heading name**. When generati
 | Japanese | English |
 |----------|---------|
 | 背景 | Background |
+| ビジネスポリシー | Business Policies |
 | 状態遷移 | State Transitions |
 | 1. 操作の定義（Operations） | 1. Operations |
 | ユーザー操作（API） | User Operations (API) |
 | イベント駆動 | Event-Driven |
 | バッチ処理 | Batch Processing |
 | 2. ビジネスルール・カタログ | 2. Business Rule Catalog |
+| 2.1 ドメインルール | 2.1 Domain Rules |
+| 2.2 システムルール | 2.2 System Rules |
 | 暗黙のルール（要確認） | Implicit Rules (Unconfirmed) |
 | 3. 関連ケイパビリティとの境界 | 3. Boundaries with Related Capabilities |
 
