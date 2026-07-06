@@ -159,16 +159,17 @@ if [ ${#protected_skills[@]} -gt 0 ]; then
 fi
 
 # is_protected <name> — protected_skills に含まれるか判定するヘルパー
+# 注: ${arr[@]+...} は bash 3.2 (macOS 標準) の「set -u + 空配列」対策
 is_protected() {
   local name="$1"
-  for p in "${protected_skills[@]}"; do
+  for p in ${protected_skills[@]+"${protected_skills[@]}"}; do
     [ "$p" = "$name" ] && return 0
   done
   return 1
 }
 
-# 旧命名（miko.*）の「標準」スキル一覧を読み込む。
-# これに載っている miko.* のみ新命名への移行で削除し、それ以外の miko.*（＝カスタム）は保持する。
+# 新命名へのリネームで置き換えられる旧スキル名（miko.*）の一覧を読み込む。
+# これに載っている miko.* のみ削除し、それ以外の miko.*（カスタムや廃止済み旧標準）は保持する。
 legacy_standard=()
 if [ -f "$tmpdir/miko/scripts/legacy_skills.txt" ]; then
   while IFS= read -r line; do
@@ -177,10 +178,10 @@ if [ -f "$tmpdir/miko/scripts/legacy_skills.txt" ]; then
   done < "$tmpdir/miko/scripts/legacy_skills.txt"
 fi
 
-# is_legacy_standard <name> — 旧標準スキル（削除して差し支えない）か判定する
+# is_legacy_standard <name> — 新命名で置き換えられる旧スキルか判定する
 is_legacy_standard() {
   local name="$1"
-  for l in "${legacy_standard[@]}"; do
+  for l in ${legacy_standard[@]+"${legacy_standard[@]}"}; do
     [ "$l" = "$name" ] && return 0
   done
   return 1
@@ -215,8 +216,8 @@ done
 # 旧命名のまま保持するカスタムスキルがあれば通知する
 if [ ${#preserved_legacy[@]} -gt 0 ]; then
   echo ""
-  say "🛡️  以下は miko 標準スキルではないため、旧命名のまま保持いたします（不要であれば手動で削除ください）:" \
-      "🛡️  The following are not miko standard skills, so they are kept under their old names (remove them manually if unneeded):"
+  say "🛡️  以下は今回の更新で置き換えられないため、旧命名のまま保持いたします。カスタムスキルのほか、廃止された旧標準スキルを含むことがあります（不要であれば手動で削除ください）:" \
+      "🛡️  The following are not replaced by this update and are kept under their old names. They may be custom skills or standard skills retired in past versions (remove them manually if unneeded):"
   for s in "${preserved_legacy[@]}"; do
     echo "    - $SKILLS_DIR/$s"
   done
