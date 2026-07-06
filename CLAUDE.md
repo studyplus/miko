@@ -9,7 +9,7 @@
 - `ofuda/guides/business_rules_guide.md`
 - `ofuda/guides/tone_guide.md`
 - `ofuda/examples/` 配下のファイル
-- 各スキルの `skills/miko.*/SKILL.md`
+- 各スキルの `skills/*/SKILL.md`
 
 ## システム原則
 
