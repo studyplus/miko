@@ -31,8 +31,15 @@ if ! command -v claude &> /dev/null; then
   exit 1
 fi
 
-# miko がインストールされているか確認（VERSION ファイルまたは miko スキルの存在）
-if [ ! -f "$VERSION_FILE" ] && [ ! -f "$OLD_VERSION_FILE" ] && ! ls -d "$SKILLS_DIR"/miko.* &> /dev/null; then
+# スキル名の配布用変換に perl を使う（macOS/Linux で挙動が同一のため）
+if ! command -v perl &> /dev/null; then
+  say "⛩️  perl が必要です。スキル名の変換に使用いたします。" \
+      "⛩️  perl is required; it is used to transform skill names for distribution."
+  exit 1
+fi
+
+# miko がインストールされているか確認（VERSION ファイルまたは miko スキルの存在。旧命名 miko.* も対象）
+if [ ! -f "$VERSION_FILE" ] && [ ! -f "$OLD_VERSION_FILE" ] && ! ls -d "$SKILLS_DIR"/miko-* &> /dev/null && ! ls -d "$SKILLS_DIR"/miko.* &> /dev/null; then
   say "⛩️  miko がインストールされていません。install.sh で初回インストールをお願いいたします。" \
       "⛩️  miko is not installed. Please run install.sh for the initial installation."
   exit 1
@@ -65,6 +72,9 @@ trap 'rm -rf "$tmpdir"' EXIT
 
 mkdir -p "$tmpdir/miko"
 curl -fsSL "https://github.com/$REPO/archive/refs/heads/$BRANCH.tar.gz" | tar -xz -C "$tmpdir/miko" --strip-components=1
+
+# 配布用の共通関数（install_skill, localize_miko_refs）を読み込む
+source "$tmpdir/miko/scripts/lib.sh"
 
 latest_semver=$(sed -n '1p' "$tmpdir/miko/ofuda/VERSION" | tr -d '[:space:]')
 latest_ts=$(sed -n '2p' "$tmpdir/miko/ofuda/VERSION" | tr -d '[:space:]')
@@ -121,11 +131,11 @@ if [ -d "$SKILLS_DIR/_miko" ]; then
   rm -rf "$SKILLS_DIR/_miko"
 fi
 
-# 最新版に存在する miko.* スキル名を収集
+# 最新版に存在するスキルの配布名（miko-<name>）を収集
 latest_skills=()
-for d in "$tmpdir"/miko/skills/miko.*/; do
+for d in "$tmpdir"/miko/skills/*/; do
   [ -d "$d" ] || continue
-  latest_skills+=("$(basename "$d")")
+  latest_skills+=("miko-$(basename "$d")")
 done
 
 # .miko/protected_skills からプロテクト対象スキルを読み込む
@@ -157,9 +167,11 @@ is_protected() {
   return 1
 }
 
-# 最新版にない miko.* スキルのうち、プロテクト済みでないものを削除候補として収集
+# 削除候補の収集: 現在の miko-* / miko.*（旧命名）スキルのうち、
+# プロテクト済みでなく最新版にないもの。
+# 旧命名 miko.* は今回の命名変更（miko.foo → miko-foo）で必ず削除候補になる。
 removed_skills=()
-for d in "$SKILLS_DIR"/miko.*/; do
+for d in "$SKILLS_DIR"/miko-*/ "$SKILLS_DIR"/miko.*/; do
   [ -d "$d" ] || continue
   name=$(basename "$d")
   is_protected "$name" && continue
@@ -173,8 +185,8 @@ done
 # 削除されるスキルがあれば一覧表示して確認
 if [ ${#removed_skills[@]} -gt 0 ]; then
   echo ""
-  say "🗑️  以下のスキルは最新版にないため削除されます:" \
-      "🗑️  The following skills are not in the latest version and will be removed:"
+  say "🗑️  以下のスキルは最新版にない（または旧命名 miko.* からの移行）ため削除されます:" \
+      "🗑️  The following skills are not in the latest version (or are legacy miko.* names) and will be removed:"
   for s in "${removed_skills[@]}"; do
     echo "    - $SKILLS_DIR/$s"
   done
@@ -204,20 +216,24 @@ if [ ${#removed_skills[@]} -gt 0 ]; then
   done
 fi
 
-# miko 管理スキルを個別に更新（プロテクト済みはスキップ）
-for s in "${latest_skills[@]}"; do
-  if is_protected "$s"; then
-    say "  🔒 $s はプロテクト済みのためスキップいたします" \
-        "  🔒 $s is protected — skipping"
+# miko 管理スキルを個別に更新（プロテクト済みはスキップ）。配布名 miko-<name> へ変換して配置する
+for d in "$tmpdir"/miko/skills/*/; do
+  [ -d "$d" ] || continue
+  name="$(basename "$d")"
+  if is_protected "miko-$name"; then
+    say "  🔒 miko-$name はプロテクト済みのためスキップいたします" \
+        "  🔒 miko-$name is protected — skipping"
     continue
   fi
-  rm -rf "${SKILLS_DIR:?}/$s"
-  cp -r "$tmpdir/miko/skills/$s" "$SKILLS_DIR/"
+  install_skill "$d" "$name"
 done
 
 # .miko/ を更新: ユーザー作成ファイル（protected_skills, config 等）を保持したまま上書き
 # rm -rf は使わず、ofuda の中身を .miko/ にマージコピーする
 cp -r "$tmpdir/miko/ofuda/." .miko/
+
+# ガイド・実例中のスキル参照もスクリプト版の名前（/miko-xxx）へ変換する
+localize_miko_refs .miko/guides .miko/examples
 
 # 言語設定に応じて tone_guide を解決する（config がない既存インストールは ja として config を作成）
 if [ ! -f ".miko/config" ]; then
