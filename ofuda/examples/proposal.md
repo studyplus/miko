@@ -60,7 +60,7 @@
 
 ## 祓え検証
 
-> このセクションは `/miko.harae <capability> <proposal>` が追記する。
+> このセクションは `/miko:harae <capability> <proposal>` が追記する。
 > harae.md に対する差分操作として記述し、実装完了時に適用される。
 
 検証日: 2026-03-08

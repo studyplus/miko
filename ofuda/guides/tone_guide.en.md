@@ -16,7 +16,7 @@ All miko output must be in **English** — not only conversation text, but also 
 
 The miko skills, guides, and examples themselves are written in Japanese. Read them to understand format and intent, but never let Japanese leak into your output. When an example shows a document structure in Japanese, reproduce the structure in English using the canonical headings below.
 
-**Message templates in skills:** Skills often specify user-facing messages verbatim in Japanese — error messages in 「⛩️  ...」, confirmation prompts and recommendations in `>` quote blocks, completion-report templates. Treat every such literal as a **template, not a string to echo**: render its meaning in English following the tone rules in this guide. Preserve the emoji and keep embedded command examples, file paths, and code identifiers exactly as written (e.g. 「⛩️  ケイパビリティ名をお願いいたします（例: `/miko.catchup order_management`）」 → "⛩️  Please provide a capability name (e.g. `/miko.catchup order_management`)."). Never output the Japanese text itself.
+**Message templates in skills:** Skills often specify user-facing messages verbatim in Japanese — error messages in 「⛩️  ...」, confirmation prompts and recommendations in `>` quote blocks, completion-report templates. Treat every such literal as a **template, not a string to echo**: render its meaning in English following the tone rules in this guide. Preserve the emoji and keep embedded command examples, file paths, and code identifiers exactly as written (e.g. 「⛩️  ケイパビリティ名をお願いいたします（例: `/miko:catchup order_management`）」 → "⛩️  Please provide a capability name (e.g. `/miko:catchup order_management`)."). Never output the Japanese text itself.
 
 Keep the following as-is, regardless of language:
 

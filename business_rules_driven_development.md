@@ -94,12 +94,12 @@ speckit は SDD のためではなく、**Claude に丁寧にコードベース�
    - 変更の背景・動機、ビジネスルールの変更、機能仕様を記述
 
 2. 検証フェーズ — harae で proposal 適用後のルール体系を攻撃的に検証（AI）
-   /miko.harae <capability> <proposal>
+   /miko:harae <capability> <proposal>
    - 矛盾・穴・悪用耐性などを攻撃的に確かめる。指摘は proposal 内に記録
-   - 変更が大きい場合は harae の後に /miko.split_proposal で親 + サブに分割できる
+   - 変更が大きい場合は harae の後に /miko:split-proposal で親 + サブに分割できる
 
 3. 実装フェーズ — proposal に基づいて実装（AI）
-   - 基本: /miko.quick_impl（speckit を通さず直接実装）
+   - 基本: /miko:quick-impl（speckit を通さず直接実装）
    - 重い変更: speckit で仕様策定・実装
      /speckit.specify → /speckit.clarify → /speckit.plan → /speckit.tasks → /speckit.analyze → /speckit.implement
      - speckit の成果物は使い捨て。Claude に深く調査させるための道具
@@ -340,13 +340,13 @@ proposal は business_rules.md への変更提案ではなく、**ケイパビ�
 
 大きな変更を PR 単位でフェーズ分割して実装したい場合、親プロポーザル + サブプロポーザル方式を使う。
 
-**フロー:** `/miko.propose` で通常通り 1 本のプロポーザルを作成し、`/miko.harae` で検証した後、`/miko.split_proposal` で分割する。
+**フロー:** `/miko:propose` で通常通り 1 本のプロポーザルを作成し、`/miko:harae` で検証した後、`/miko:split-proposal` で分割する。
 
 ```
-/miko.propose → 1 本のプロポーザル作成
-/miko.harae → 検証（推奨。分割前にやると手戻りが少ない）
-/miko.split_proposal → 親（umbrella）+ サブに分割
-→ 各サブに対して /miko.speckit.specify → 実装フロー
+/miko:propose → 1 本のプロポーザル作成
+/miko:harae → 検証（推奨。分割前にやると手戻りが少ない）
+/miko:split-proposal → 親（umbrella）+ サブに分割
+→ 各サブに対して /miko:speckit-specify → 実装フロー
 ```
 
 **親プロポーザル（umbrella proposal）**: 全体の背景・動機とフェーズ構成のみ。BR 変更・機能仕様は書かない（サブに委譲）。ファイル先頭の `<umbrella-proposal>` マーカーの有無で親/通常を判定する。
@@ -365,8 +365,8 @@ miko/<other_capability>/proposals/
   2026-03-18-cancel-notify-phase1.md     # 影響先サブ（Phase 1 の横断 BR 変更）
 ```
 
-- 実装は各サブプロポーザルに対して `/miko.speckit.specify` → 実装フローを実行する。同じフェーズのメインサブ + 影響先サブは `/miko.speckit.specify` に複数パスを渡して統合 spec を生成する
-- `/miko.harae` に親プロポーザルを渡すと、全サブプロポーザルを読み込んでフェーズ間矛盾も検出する
+- 実装は各サブプロポーザルに対して `/miko:speckit-specify` → 実装フローを実行する。同じフェーズのメインサブ + 影響先サブは `/miko:speckit-specify` に複数パスを渡して統合 spec を生成する
+- `/miko:harae` に親プロポーザルを渡すと、全サブプロポーザルを読み込んでフェーズ間矛盾も検出する
 - フラット配置で既存の `proposals/*.md` との互換性を維持する
 - 親子間のリンクは `miko/` からの相対パスで記述する（ケイパビリティを跨ぐため）
 
@@ -386,22 +386,22 @@ miko/<other_capability>/proposals/
 **フロー:**
 
 ```
-/miko.propose 時:
+/miko:propose 時:
   → 対話でドラフトを確定
   → 「他ケイパビリティへの影響を調査しますか？」と確認
   → サブエージェントが business_rules.md 存在するケイパビリティを走査
   → 調査結果をもとに proposal の「他ケイパビリティへの影響」セクション + <needs-split> マーカーを付与
-  → 完了報告で /miko.split_proposal の実行を案内
+  → 完了報告で /miko:split-proposal の実行を案内
 
-/miko.split_proposal 時:
+/miko:split-proposal 時:
   → 「他ケイパビリティへの影響」セクションから影響先サブプロポーザルを作成
   → 影響先ケイパビリティの proposals/ に配置
   → 親プロポーザルのフェーズ構成に列挙（パスからケイパビリティが判別可能）
 
-/miko.speckit.specify 時:
+/miko:speckit-specify 時:
   → 同じ親の複数サブ（メインサブ + 影響先サブ）を受け付け、統合 spec を生成
 
-/miko.speckit.implement 時:
+/miko:speckit-implement 時:
   → 統合 spec に含まれる複数ケイパビリティの BR 変更を各 business_rules.md に反映
 ```
 
