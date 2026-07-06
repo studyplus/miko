@@ -167,11 +167,31 @@ is_protected() {
   return 1
 }
 
-# 削除候補の収集: 現在の miko-* / miko.*（旧命名）スキルのうち、
-# プロテクト済みでなく最新版にないもの。
-# 旧命名 miko.* は今回の命名変更（miko.foo → miko-foo）で必ず削除候補になる。
+# 旧命名（miko.*）の「標準」スキル一覧を読み込む。
+# これに載っている miko.* のみ新命名への移行で削除し、それ以外の miko.*（＝カスタム）は保持する。
+legacy_standard=()
+if [ -f "$tmpdir/miko/scripts/legacy_skills.txt" ]; then
+  while IFS= read -r line; do
+    [[ -z "$line" || "$line" == \#* ]] && continue
+    legacy_standard+=("$line")
+  done < "$tmpdir/miko/scripts/legacy_skills.txt"
+fi
+
+# is_legacy_standard <name> — 旧標準スキル（削除して差し支えない）か判定する
+is_legacy_standard() {
+  local name="$1"
+  for l in "${legacy_standard[@]}"; do
+    [ "$l" = "$name" ] && return 0
+  done
+  return 1
+}
+
+# 削除候補の収集:
+#   - miko-*（現行命名）: プロテクト済みでなく最新版にないもの（miko 管理の名前空間）
+#   - miko.*（旧命名）  : 旧標準スキルのみ。未知の miko.* はカスタムとみなし保持する
 removed_skills=()
-for d in "$SKILLS_DIR"/miko-*/ "$SKILLS_DIR"/miko.*/; do
+preserved_legacy=()
+for d in "$SKILLS_DIR"/miko-*/; do
   [ -d "$d" ] || continue
   name=$(basename "$d")
   is_protected "$name" && continue
@@ -181,12 +201,32 @@ for d in "$SKILLS_DIR"/miko-*/ "$SKILLS_DIR"/miko.*/; do
   done
   [ "$found" = false ] && removed_skills+=("$name")
 done
+for d in "$SKILLS_DIR"/miko.*/; do
+  [ -d "$d" ] || continue
+  name=$(basename "$d")
+  is_protected "$name" && continue
+  if is_legacy_standard "$name"; then
+    removed_skills+=("$name")
+  else
+    preserved_legacy+=("$name")
+  fi
+done
+
+# 旧命名のまま保持するカスタムスキルがあれば通知する
+if [ ${#preserved_legacy[@]} -gt 0 ]; then
+  echo ""
+  say "🛡️  以下は miko 標準スキルではないため、旧命名のまま保持いたします（不要であれば手動で削除ください）:" \
+      "🛡️  The following are not miko standard skills, so they are kept under their old names (remove them manually if unneeded):"
+  for s in "${preserved_legacy[@]}"; do
+    echo "    - $SKILLS_DIR/$s"
+  done
+fi
 
 # 削除されるスキルがあれば一覧表示して確認
 if [ ${#removed_skills[@]} -gt 0 ]; then
   echo ""
-  say "🗑️  以下のスキルは最新版にない（または旧命名 miko.* からの移行）ため削除されます:" \
-      "🗑️  The following skills are not in the latest version (or are legacy miko.* names) and will be removed:"
+  say "🗑️  以下の旧標準スキルは新命名（miko-*）へ移行するため削除されます:" \
+      "🗑️  The following legacy standard skills will be removed as they migrate to the new names (miko-*):"
   for s in "${removed_skills[@]}"; do
     echo "    - $SKILLS_DIR/$s"
   done
