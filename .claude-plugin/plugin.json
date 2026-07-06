@@ -1,0 +1,19 @@
+{
+  "name": "miko",
+  "displayName": "miko",
+  "version": "1.3.2",
+  "description": "ビジネスルールドリブン開発のための Claude Code スキルセット / Claude Code skill set for business-rules-driven development",
+  "author": {
+    "name": "Studyplus inc."
+  },
+  "homepage": "https://github.com/studyplus/miko",
+  "repository": "https://github.com/studyplus/miko",
+  "license": "MIT",
+  "keywords": [
+    "business-rules",
+    "documentation",
+    "domain-knowledge",
+    "skills"
+  ],
+  "skills": "./skills/"
+}

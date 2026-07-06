@@ -24,8 +24,9 @@ $ARGUMENTS
    - `patch`: パッチを +1
 3. タイムスタンプを現在の UTC 時刻で更新する（フォーマット: `YYYYMMDDHHmm`、12桁、秒なし）
 4. `ofuda/VERSION` を書き込む
-5. `CHANGELOG.md` の先頭（`# Changelog` の直後）に新バージョンのセクションを追加する:
+5. `.claude-plugin/plugin.json` の `version` フィールドを新バージョンに更新する
+6. `CHANGELOG.md` の先頭（`# Changelog` の直後）に新バージョンのセクションを追加する:
    - 見出し: `## v{新バージョン} ({YYYY-MM-DD})`（日付は今日の日付）
    - 直近の git log（前のバージョンタグまたは適切な範囲）を参考に、変更内容を `### New` / `### Changed` / `### Optimized` / `### Fixed` のうち該当するカテゴリで記述する
    - 既存の CHANGELOG のスタイルに合わせる
-6. 更新前後を表示する
+7. 更新前後を表示する

@@ -1,0 +1,16 @@
+{
+  "name": "miko",
+  "owner": {
+    "name": "Studyplus inc."
+  },
+  "metadata": {
+    "description": "miko — ビジネスルールドリブン開発のための Claude Code スキルセット / Claude Code skill set for business-rules-driven development"
+  },
+  "plugins": [
+    {
+      "name": "miko",
+      "source": "./",
+      "description": "ビジネスルールドリブン開発のための Claude Code スキルセット。巫女のように、主さまと AI がドメイン知識を共有する基盤をお作りいたします。"
+    }
+  ]
+}
