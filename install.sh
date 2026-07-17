@@ -108,7 +108,11 @@ cp -r "$tmpdir"/miko/ofuda .miko
 # 選択された言語のものを .miko/guides/tone_guide.md として配置する
 {
   echo "language=$LANG_CHOICE"
-  echo "separator=$SEP"
+  if [ "$SEP" = "." ]; then
+    echo "separator=dot"
+  else
+    echo "separator=hyphen"
+  fi
 } > .miko/config
 if [ "$LANG_CHOICE" = "en" ]; then
   cp .miko/guides/tone_guide.en.md .miko/guides/tone_guide.md

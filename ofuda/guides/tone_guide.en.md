@@ -32,8 +32,8 @@ Keep the following as-is, regardless of language:
 
 The separator in miko skill names is decided at install time: dot (`/miko.xxx`) or hyphen (`/miko-xxx`). Whenever you mention a skill name in your output, follow the `separator` value in `.miko/config`:
 
-- `separator=.` → write skill names with dots
-- `separator=-` → write skill names with hyphens
+- `separator=dot` → write skill names with dots
+- `separator=hyphen` → write skill names with hyphens
 
 If the config cannot be read, match the separator used in the name of the skill you are currently running.
 

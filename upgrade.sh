@@ -14,11 +14,11 @@ if [ -f ".miko/config" ]; then
   [ "$LANG_CHOICE" = "en" ] || LANG_CHOICE="ja"
 fi
 
-# スキル名の区切り文字設定: .miko/config の separator (./-) を読む。なければ .
+# スキル名の区切り文字設定: .miko/config の separator (dot/hyphen) を読む。なければ dot
 SEP="."
 if [ -f ".miko/config" ]; then
   sep_val=$(grep -E '^separator=' .miko/config | head -n 1 | cut -d= -f2 | tr -d '[:space:]' || true)
-  [ "$sep_val" = "-" ] && SEP="-"
+  [ "$sep_val" = "hyphen" ] && SEP="-"
 fi
 
 # to_local <name> — 正規スキル名（. 区切り）を設定された区切り文字の名前に変換する
@@ -253,7 +253,11 @@ if [ ! -f ".miko/config" ]; then
 fi
 # v1.4.0 より前のインストールには separator 設定がないため補完する（既存はドット区切り）
 if ! grep -qE '^separator=' .miko/config; then
-  echo "separator=$SEP" >> .miko/config
+  if [ "$SEP" = "." ]; then
+    echo "separator=dot" >> .miko/config
+  else
+    echo "separator=hyphen" >> .miko/config
+  fi
 fi
 if [ "$LANG_CHOICE" = "en" ] && [ -f ".miko/guides/tone_guide.en.md" ]; then
   cp .miko/guides/tone_guide.en.md .miko/guides/tone_guide.md
