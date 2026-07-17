@@ -4,7 +4,11 @@
 
 ### New
 
-- **スキル名の区切り文字（ハイフン / ドット）を選択可能に** — 一部の LLM プラットフォームは Agent Skills 準拠のハイフン区切りのスキル名しか使えないため、新規インストールはどこでも動作するハイフン区切り（`/miko-setup`）で配置するようにした。初回の setup スキル実行時にドット区切り（`/miko.setup`、従来形式）への変更が確認される。`bash .miko/switch_separator.sh <.|->` でいつでも切り替え可能。`MIKO_SEPARATOR` 環境変数で明示した場合は初回確認をスキップ。設定は `.miko/config` の `separator=` に保存され、スキルディレクトリ名とファイル内のスキル名参照（handoffs 含む）がインストール・アップグレード・切り替え時に自動変換される。既存インストールはドット区切りのまま維持される
+- **スキル名の区切り文字（ハイフン / ドット）を選択可能に** — 一部の LLM プラットフォームは Agent Skills 準拠のハイフン区切りのスキル名しか使えないため、インストール時にどこでも動作するハイフン区切り（`/miko-setup`、デフォルト）とドット区切り（`/miko.setup`）を選択できるようにした。設定は `.miko/config` の `separator=` に保存され、スキルディレクトリ名とファイル内のスキル名参照（handoffs 含む）がインストール・アップグレード時に自動変換される。`bash .miko/switch_separator.sh <.|->` でいつでも切り替え可能。tone_guide に「出力でスキル名に言及するときは config の separator に従う」を明記
+
+### Changed
+
+- **スキル名のアンダースコアをハイフンに統一** — `miko.new_cap` → `miko.new-cap` のように、スキル名内の `_` を `-` に変更（対象: new-cap / new-harae / quick-catchup / quick-impl / split-proposal / catchup-system-hld）。ハイフン区切り選択時に `miko-new_harae` のような混在表記になるのを避けるため。既存インストールはアップグレード時に旧名スキルが削除され新名で再配置される
 
 ### Fixed
 

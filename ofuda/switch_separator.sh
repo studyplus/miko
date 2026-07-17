@@ -8,8 +8,6 @@ set -euo pipefail
 #
 # 対象は .miko/skills_manifest に列挙された miko 管理スキルのみ。
 # ユーザー作成のカスタムスキルには触れない。
-# 実行後は確認済みフラグ (separator_confirmed=1) を立て、
-# setup スキルの初回確認が再度走らないようにする。
 
 SKILLS_DIR=".claude/skills"
 CONFIG=".miko/config"
@@ -53,7 +51,6 @@ set_config() {
 }
 
 if [ "$TARGET" = "$CURRENT" ]; then
-  set_config separator_confirmed 1
   say "✨ 既に区切り文字は「${TARGET}」です。変更はございません。" \
       "✨ The separator is already \"$TARGET\". Nothing to change."
   exit 0
@@ -99,7 +96,6 @@ find "${rewrite_targets[@]}" -type f -name '*.md' | while IFS= read -r f; do
 done
 
 set_config separator "$TARGET"
-set_config separator_confirmed 1
 
 say "✨ スキル名の区切り文字を「${TARGET}」に変更いたしました（${renamed} スキル）。" \
     "✨ The skill name separator has been changed to \"$TARGET\" ($renamed skills)."

@@ -28,15 +28,27 @@ case "$LANG_CHOICE" in
   *) LANG_CHOICE="ja" ;;
 esac
 
-# スキル名の区切り文字: 一部の LLM プラットフォームは Agent Skills 準拠の
-# ハイフン区切りの名前しか使えないため、どこでも動くハイフン区切り (miko-setup) で配置する。
-# ドット区切り (miko.setup) への変更は初回の setup スキル実行時に確認される。
-# MIKO_SEPARATOR 環境変数 (./-) で明示した場合は確認済みとして扱い、確認をスキップする。
-case "${MIKO_SEPARATOR:-}" in
-  .) SEP="." ; SEP_CONFIRMED=1 ;;
-  -) SEP="-" ; SEP_CONFIRMED=1 ;;
-  *) SEP="-" ; SEP_CONFIRMED=0 ;;
-esac
+# スキル名の区切り文字選択: 対話プロンプト > デフォルト -
+# 一部の LLM プラットフォームは Agent Skills 準拠のハイフン区切りの名前しか使えないため、
+# どこでも動くハイフン区切り (miko-setup) をデフォルトとし、ドット区切り (miko.setup) も選択できる。
+# インストール後の変更は .miko/switch_separator.sh で行える
+SEP="-"
+if [ -t 0 ]; then
+  if [ "$LANG_CHOICE" = "en" ]; then
+    echo "⛩️  Please select the skill name separator:"
+    echo "    1) hyphen (/miko-setup) — works on every platform"
+    echo "    2) dot    (/miko.setup) — for platforms that support dots in skill names"
+  else
+    echo "⛩️  スキル名の区切り文字を選択ください:"
+    echo "    1) ハイフン (/miko-setup) — どのプラットフォームでも動作"
+    echo "    2) ドット   (/miko.setup) — ドット区切りに対応したプラットフォーム向け"
+  fi
+  read -r -p "  [1/2] (default: 1): " ans
+  case "$ans" in
+    2|.|dot) SEP="." ;;
+    *) SEP="-" ;;
+  esac
+fi
 
 # to_local <name> — 正規スキル名（. 区切り）を選択された区切り文字の名前に変換する
 to_local() { echo "${1//./$SEP}"; }
@@ -100,7 +112,6 @@ printf '%s\n' "${canonical_skills[@]}" > .miko/skills_manifest
 {
   echo "language=$LANG_CHOICE"
   echo "separator=$SEP"
-  echo "separator_confirmed=$SEP_CONFIRMED"
 } > .miko/config
 if [ "$LANG_CHOICE" = "en" ]; then
   cp .miko/guides/tone_guide.en.md .miko/guides/tone_guide.md

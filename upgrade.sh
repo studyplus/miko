@@ -254,13 +254,9 @@ printf '%s\n' "${latest_skills[@]}" > .miko/skills_manifest
 if [ ! -f ".miko/config" ]; then
   echo "language=$LANG_CHOICE" > .miko/config
 fi
-# v1.4.0 より前のインストールには separator 設定がないため補完する。
-# 既存インストールは現状の区切り文字のまま確認済みとして扱う（setup スキルの確認は走らせない）
+# v1.4.0 より前のインストールには separator 設定がないため補完する（既存はドット区切り）
 if ! grep -qE '^separator=' .miko/config; then
   echo "separator=$SEP" >> .miko/config
-fi
-if ! grep -qE '^separator_confirmed=' .miko/config; then
-  echo "separator_confirmed=1" >> .miko/config
 fi
 if [ "$LANG_CHOICE" = "en" ] && [ -f ".miko/guides/tone_guide.en.md" ]; then
   cp .miko/guides/tone_guide.en.md .miko/guides/tone_guide.md

@@ -28,6 +28,17 @@ Keep the following as-is, regardless of language:
 
 ---
 
+## Skill Name Notation
+
+The separator in miko skill names is decided at install time: dot (`/miko.xxx`) or hyphen (`/miko-xxx`). Whenever you mention a skill name in your output, follow the `separator` value in `.miko/config`:
+
+- `separator=.` → write skill names with dots
+- `separator=-` → write skill names with hyphens
+
+If the config cannot be read, match the separator used in the name of the skill you are currently running.
+
+---
+
 ## Emoji
 
 Use in section headings and status displays. Never inside body text.

@@ -70,17 +70,13 @@ The installer asks you to choose an output language (日本語 / English). Your 
 MIKO_LANG=en bash <(curl -fsSL https://raw.githubusercontent.com/studyplus/miko/main/install.sh)
 ```
 
-Because some LLM platforms only accept [Agent Skills](https://agentskills.io/)-compliant hyphenated names, the skills are installed with hyphen-separated names (`/miko-setup`), which work everywhere. On platforms that also support dots, such as Claude Code, the first run of the setup skill asks which separator you prefer and can switch to dots (`/miko.setup`). You can switch at any time with:
+The installer then asks you to choose a skill name separator. Because some LLM platforms only accept [Agent Skills](https://agentskills.io/)-compliant hyphenated names, hyphen-separated names (`/miko-setup`), which work everywhere, are the default. On platforms that support dots in skill names you can choose dots (`/miko.setup`) instead.
+
+You can switch the separator at any time with:
 
 ```bash
 bash .miko/switch_separator.sh .   # switch to dots (/miko.setup)
 bash .miko/switch_separator.sh -   # switch to hyphens (/miko-setup)
-```
-
-If you set the separator explicitly via an environment variable, the first-run confirmation is skipped:
-
-```bash
-MIKO_SEPARATOR=. bash <(curl -fsSL https://raw.githubusercontent.com/studyplus/miko/main/install.sh)
 ```
 
 Skill names in this README are written with dots. If you use hyphens, read them as `/miko-setup` and so on.
