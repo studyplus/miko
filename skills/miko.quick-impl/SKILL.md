@@ -10,9 +10,9 @@ $ARGUMENTS
 
 入力の形式: 以下のいずれか
 
-- proposal のパス（例: `/miko.quick_impl miko/order_management/proposals/2026-03-01-fix-trial-grace-period.md`）
-- 変更指示の自由記述（例: `/miko.quick_impl OrderService を OrderFacade にリネーム`）
-- 空の場合はエラー: 「⛩️  proposal のパスまたは変更指示をお願いいたします（例: `/miko.quick_impl miko/order_management/proposals/2026-03-01-fix-trial-grace-period.md`）」
+- proposal のパス（例: `/miko.quick-impl miko/order_management/proposals/2026-03-01-fix-trial-grace-period.md`）
+- 変更指示の自由記述（例: `/miko.quick-impl OrderService を OrderFacade にリネーム`）
+- 空の場合はエラー: 「⛩️  proposal のパスまたは変更指示をお願いいたします（例: `/miko.quick-impl miko/order_management/proposals/2026-03-01-fix-trial-grace-period.md`）」
 
 ---
 
@@ -47,7 +47,7 @@ miko の原則として BR ルール本文の変更には proposal が必要。p
   > ⛩️  親プロポーザルは直接実装できません。サブプロポーザルを指定してください。
 - 未分割プロポーザルの検出 — 先頭に `<needs-split>` マーカーがある場合、エラーとして中止する:
   > ⛩️  このプロポーザルは分割が必要です。
-  > まず `/miko.split_proposal` でフェーズ分割してから、サブプロポーザルを指定してください。
+  > まず `/miko.split-proposal` でフェーズ分割してから、サブプロポーザルを指定してください。
 
 ### 2. 資料読み込み
 

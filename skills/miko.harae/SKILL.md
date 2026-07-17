@@ -17,7 +17,7 @@ $ARGUMENTS
 **`miko/<capability>/harae.md` が存在しない場合はエラー:**
 
 > ⛩️  `miko/<capability>/harae.md` が見つかりません。
-> まず `/miko.new_harae <capability>` で初回検証を行ってください。
+> まず `/miko.new-harae <capability>` で初回検証を行ってください。
 
 **proposal が指定されていない場合:**
 
@@ -38,7 +38,7 @@ $ARGUMENTS
 
 **成果物:**
 - proposal なしの場合: `miko/<capability>/harae.md` を更新する
-- proposal 付きの場合: **proposal ファイル内に「祓え検証」セクションを追記する。harae.md は更新しない。** proposal はまだ確定していないため、harae.md への永続化は実装完了時（miko.speckit.implement / miko.quick_impl）に行う
+- proposal 付きの場合: **proposal ファイル内に「祓え検証」セクションを追記する。harae.md は更新しない。** proposal はまだ確定していないため、harae.md への永続化は実装完了時（miko.speckit.implement / miko.quick-impl）に行う
 
 **検証の6軸:** `.miko/guides/harae_guide.md` に定義された6軸（内部矛盾・不完全性・境界の曖昧さ・時間軸の破綻・ビジネス毀損・悪用耐性）で検証する。proposal 付きの場合は6軸に加えて「既存への影響（proposal の変更で既存の本番エンティティが意図せず壊れないか）」も検証する。
 
@@ -117,7 +117,7 @@ proposal が指定されていない場合。メインセッションで棚卸�
 
 proposal が指定されている場合。proposal を仮想適用した BR を検証し、**指摘は proposal に追記する。harae.md は更新しない。**
 
-proposal はまだ確定していないため、harae.md への永続化は実装完了時に行う（miko.speckit.implement / miko.quick_impl のデザインドキュメント更新ステップで harae.md に転記される）。
+proposal はまだ確定していないため、harae.md への永続化は実装完了時に行う（miko.speckit.implement / miko.quick-impl のデザインドキュメント更新ステップで harae.md に転記される）。
 
 ### 1. 資料の読み込み
 
@@ -179,7 +179,7 @@ proposal の変更が既存の本番エンティティを意図せず壊さな�
 
 ### 4. proposal に祓え検証セクションを追記
 
-対話の結果を反映し、proposal ファイルの末尾に「祓え検証」セクションとして追記する。このセクションは **harae.md に対する差分操作** を記述するもので、実装完了時（miko.speckit.implement / miko.quick_impl）に harae.md へ適用される。
+対話の結果を反映し、proposal ファイルの末尾に「祓え検証」セクションとして追記する。このセクションは **harae.md に対する差分操作** を記述するもので、実装完了時（miko.speckit.implement / miko.quick-impl）に harae.md へ適用される。
 
 **フォーマット:** `.miko/examples/proposal.md` の「祓え検証」セクションに従う。注意点:
 - 「既存指摘のステータス変更」は該当がなければ省略する

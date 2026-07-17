@@ -10,10 +10,10 @@ $ARGUMENTS
 
 入力の形式: `<capability_name> [diff_source]`
 
-- 例: `/miko.quick_catchup order_management` — カレントブランチのベースブランチからの diff を使用
-- 例: `/miko.quick_catchup order_management #8250` — PR の diff を使用
-- 例: `/miko.quick_catchup order_management HEAD~3..HEAD` — git range を使用
-- 空の場合はエラー: 「⛩️  ケイパビリティ名をお願いいたします（例: `/miko.quick_catchup order_management`）」
+- 例: `/miko.quick-catchup order_management` — カレントブランチのベースブランチからの diff を使用
+- 例: `/miko.quick-catchup order_management #8250` — PR の diff を使用
+- 例: `/miko.quick-catchup order_management HEAD~3..HEAD` — git range を使用
+- 空の場合はエラー: 「⛩️  ケイパビリティ名をお願いいたします（例: `/miko.quick-catchup order_management`）」
 
 ---
 
@@ -36,11 +36,11 @@ miko フローを通さずに入ったコード変更（緊急 FIX 等）を、�
 
 ユーザーに確認する:
 
-> ⛩️  キャッチアップの前に確認でございます。`/miko.catchup_system_hld` は実施済みでしょうか？
+> ⛩️  キャッチアップの前に確認でございます。`/miko.catchup-system-hld` は実施済みでしょうか？
 > `system_high_level_design.md` が古いままですと、コード探索のスコープがずれる恐れがございます。
 
 - ユーザーが「実施済み」「不要」等と回答した場合 → 次に進む
-- ユーザーが「まだ」「やってほしい」等と回答した場合 → `/miko.catchup_system_hld` の実行を案内し、完了後に `/miko.quick_catchup` を再実行するよう伝えて中止する
+- ユーザーが「まだ」「やってほしい」等と回答した場合 → `/miko.catchup-system-hld` の実行を案内し、完了後に `/miko.quick-catchup` を再実行するよう伝えて中止する
 
 ### 2. 入力検証・資料読み込み
 
@@ -57,7 +57,7 @@ miko フローを通さずに入ったコード変更（緊急 FIX 等）を、�
 - `miko/system_high_level_design.md` — コード探索ガイド（着目点の参照）
 - `miko/<capability>/business_rules.md` — 現在のビジネスルール。**存在しない場合はエラー:**
   > ⛩️  `miko/<capability>/business_rules.md` が見つかりません。
-  > - 新規作成は `/miko.new_cap <capability>` をお使いください
+  > - 新規作成は `/miko.new-cap <capability>` をお使いください
 - `miko/<capability>/high_level_design.md` — 現在の構造（あれば）
 
 **探索対象外:** `.miko/` ディレクトリは miko の内部リソースであり、プロジェクトのコードではない。探索・精読の対象にしないこと。
@@ -103,7 +103,7 @@ diff ソース、変更の要約、ビジネスルールへの影響（新設/�
 
 **ファイル名:** `miko/<capability>/proposals/YYYY-MM-DD-<kebab-case-title>.md`
 
-**構造:** `.miko/examples/proposal.md` に準ずる。quick_catchup 固有の違い:
+**構造:** `.miko/examples/proposal.md` に準ずる。quick-catchup 固有の違い:
 - 冒頭に「このプロポーザルはコード変更から事後的に作成されたものです。」と付記
 - 影響範囲に diff ソースと変更ファイル一覧を記載する
 

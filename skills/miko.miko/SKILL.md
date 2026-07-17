@@ -71,12 +71,12 @@ miko に関するあらゆるご質問にお答えする。
 
 1. **プロジェクトに miko を初めて導入する**
    → `/miko.setup` をご案内
-   - セットアップ後にコードベースが変わった場合は `/miko.catchup_system_hld` で追従
+   - セットアップ後にコードベースが変わった場合は `/miko.catchup-system-hld` で追従
 
 2. **新しいケイパビリティを定義したい**
-   → `/miko.new_cap <capability>` をご案内
-   - `new_cap` は BR/HLD を作成するまで。実装はしない
-   - 定義後は `/miko.new_harae <capability>` で初回検証をお勧めする
+   → `/miko.new-cap <capability>` をご案内
+   - `new-cap` は BR/HLD を作成するまで。実装はしない
+   - 定義後は `/miko.new-harae <capability>` で初回検証をお勧めする
    - 指摘を修正したら `/miko.harae <capability>` で再検証をお勧めする
    - 実装に進むには、まず `/miko.propose` で proposal を作成してから
 
@@ -86,28 +86,28 @@ miko に関するあらゆるご質問にお答えする。
      - まず `/miko.propose` で proposal をお作りする（実装の前には必ず proposal が必要）
    - **検証フェーズ**（harae でルール体系を攻撃的に確かめる）:
      - proposal ができたら `/miko.harae <capability> <proposal>` でルール検証をお勧めする（指摘は proposal 内に記録される）
-     - 変更が大きい場合や他ケイパビリティへの横断影響がある場合は `/miko.split_proposal` で親（umbrella）+ サブにフェーズ分割できる（harae の後に実施。横断影響がある場合は影響先ケイパビリティにサブ proposal が作られる。DB マイグレーションや環境変更の分離にも有効）
+     - 変更が大きい場合や他ケイパビリティへの横断影響がある場合は `/miko.split-proposal` で親（umbrella）+ サブにフェーズ分割できる（harae の後に実施。横断影響がある場合は影響先ケイパビリティにサブ proposal が作られる。DB マイグレーションや環境変更の分離にも有効）
    - **実装フェーズ**（proposal に基づいて実装する。分割した場合は各サブ proposal に対して実行）:
-     - 基本は `/miko.quick_impl` をお勧め（speckit を通さず直接実装）
+     - 基本は `/miko.quick-impl` をお勧め（speckit を通さず直接実装）
      - 重い変更（複数の意図が絡む、影響範囲の見極めに探索が要る、処理構造が大きく動く）→ フルフロー（`/miko.speckit.specify` から）をお勧め
      - 判断がつかない → まず proposal で整理し、規模を見てからご案内
    - 実装完了時に business_rules.md + high_level_design.md + harae.md が自動更新される
 
 4. **コードは書いたがドキュメントが追いついていない**
-   - まず `/miko.catchup_system_hld` で system_high_level_design.md の追従を確認
-   - 特定の変更（PR、ブランチ）だけ → `/miko.quick_catchup <capability> [diff]`
+   - まず `/miko.catchup-system-hld` で system_high_level_design.md の追従を確認
+   - 特定の変更（PR、ブランチ）だけ → `/miko.quick-catchup <capability> [diff]`
    - 全体的に古くなっている → `/miko.catchup <capability>`
 
 4-2. **proposal を通さないリファクタリングをしたい（リネーム・移動・責務の再配置等）**
-   - `/miko.quick_impl <変更指示>` をご案内（proposal は不要）
+   - `/miko.quick-impl <変更指示>` をご案内（proposal は不要）
    - 実装後に影響する実装マッピングを全ケイパビリティ横断で自動更新
    - BR 本文の変更が必要と判定された場合は `/miko.propose` に誘導される
    - スコープ（意図の単一性・影響範囲の明瞭さ・機械性 or 局所性）を超える場合はフルフローに誘導される
 
 5. **propose は済んでいて、実装フェーズに進みたい**
    - harae が未実施で重要な変更 → `/miko.harae <capability> <proposal>` で検証してから実装フェーズへ
-   - 変更が大きい、または横断影響がある → `/miko.split_proposal` で分割してから各サブ proposal に対して実装
-   - 基本 → `/miko.quick_impl` で直接
+   - 変更が大きい、または横断影響がある → `/miko.split-proposal` で分割してから各サブ proposal に対して実装
+   - 基本 → `/miko.quick-impl` で直接
    - 重い変更 → フルフロー（`/miko.speckit.specify` から）
    - いずれも実装完了時に harae.md への転記を含むドキュメント更新が自動で行われる
 
@@ -123,7 +123,7 @@ miko に関するあらゆるご質問にお答えする。
    - BR の変更は直接編集ではなく、必ず `/miko.propose` でプロポーザルを作成してから行う
    - 対話の中で「このルールが足りない」「このルールは実態と違う」と判明した場合も同様
    - 例: 「BR をチェックして → 不足を発見 → `/miko.propose` で変更提案を作りましょう」
-   - 実装も必要なら、proposal 作成後にパターン3の実装フェーズ（基本は quick_impl、重い変更は speckit フロー）に進む
+   - 実装も必要なら、proposal 作成後にパターン3の実装フェーズ（基本は quick-impl、重い変更は speckit フロー）に進む
 
 ---
 
@@ -202,7 +202,7 @@ miko の実装フローでは **constitution**（`.specify/memory/constitution.m
 
 **対話の中で BR の不足・誤り・変更の必要性が判明した場合、直接 BR を編集する提案をしてはいけない。** 必ず `/miko.propose` でプロポーザルを作成するフローに誘導する。
 
-これは BR チェックの依頼に限らない。どのような入力・対話であっても、結果として「BR を変えるべき」と判明したら `/miko.propose` → 必要に応じて実装フロー（基本は `/miko.quick_impl`、重い変更は `/miko.speckit.specify` → `/miko.speckit.plan` → ...）の順で進める。
+これは BR チェックの依頼に限らない。どのような入力・対話であっても、結果として「BR を変えるべき」と判明したら `/miko.propose` → 必要に応じて実装フロー（基本は `/miko.quick-impl`、重い変更は `/miko.speckit.specify` → `/miko.speckit.plan` → ...）の順で進める。
 
 **悪い例:**
 > 「このルールが BR に不足しています。追加いたしましょうか？」

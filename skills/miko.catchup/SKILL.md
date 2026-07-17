@@ -22,18 +22,18 @@ $ARGUMENTS
 
 ユーザーに確認する:
 
-> ⛩️  キャッチアップの前に確認でございます。`/miko.catchup_system_hld` は実施済みでしょうか？
+> ⛩️  キャッチアップの前に確認でございます。`/miko.catchup-system-hld` は実施済みでしょうか？
 > `system_high_level_design.md` が古いままですと、コード探索のスコープがずれる恐れがございます。
 
 - ユーザーが「実施済み」「不要」等と回答した場合 → 次に進む
-- ユーザーが「まだ」「やってほしい」等と回答した場合 → `/miko.catchup_system_hld` の実行を案内し、完了後に `/miko.catchup` を再実行するよう伝えて中止する
+- ユーザーが「まだ」「やってほしい」等と回答した場合 → `/miko.catchup-system-hld` の実行を案内し、完了後に `/miko.catchup` を再実行するよう伝えて中止する
 
 ### 3. 既存ファイル確認
 
 - `miko/<capability>/business_rules.md` が存在するか確認する
 - **存在しない場合はエラーとして中止する:**
   > ⛩️  `miko/<capability>/business_rules.md` が見つかりません。
-  > - 新規作成は `/miko.new_cap <capability>` をお使いください
+  > - 新規作成は `/miko.new-cap <capability>` をお使いください
 - 存在する場合:
   - 「🌿 既存の business_rules.md を読み込み、コードとの差分をキャッチアップいたします。」
 

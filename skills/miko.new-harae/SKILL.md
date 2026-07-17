@@ -10,8 +10,8 @@ $ARGUMENTS
 
 入力の形式: `<capability_name>`
 
-- 例: `/miko.new_harae order_management`
-- 空の場合はエラー: 「⛩️  ケイパビリティ名をお願いいたします（例: `/miko.new_harae order_management`）」
+- 例: `/miko.new-harae order_management`
+- 空の場合はエラー: 「⛩️  ケイパビリティ名をお願いいたします（例: `/miko.new-harae order_management`）」
 
 **`miko/<capability>/harae.md` が既に存在する場合はエラー:**
 
@@ -31,13 +31,13 @@ $ARGUMENTS
 **検証の6軸:** `.miko/guides/harae_guide.md` に定義された6軸（内部矛盾・不完全性・境界の曖昧さ・時間軸の破綻・ビジネス毀損・悪用耐性）で検証する。
 
 **使用タイミング:**
-- `/miko.new_cap` 後 — 定義したルールの初回検証
+- `/miko.new-cap` 後 — 定義したルールの初回検証
 
 **フローでの位置づけ:**
 
 ```
-/miko.new_cap → ルール定義
-/miko.new_harae → ルールの弱点を探す（初回）
+/miko.new-cap → ルール定義
+/miko.new-harae → ルールの弱点を探す（初回）
 /miko.harae → 既存の harae.md を棚卸し・差分探索（2回目以降）
 ```
 
@@ -55,7 +55,7 @@ $ARGUMENTS
 - `.miko/guides/harae_format_guide.md` — harae.md のフォーマットとステータス管理ルール
 - `miko/<capability>/business_rules.md` — **存在しない場合はエラー:**
   > ⛩️  `miko/<capability>/business_rules.md` が見つかりません。
-  > まず `/miko.new_cap <capability>` でケイパビリティを定義してください。
+  > まず `/miko.new-cap <capability>` でケイパビリティを定義してください。
 - `miko/<capability>/high_level_design.md` — あれば
 - `miko/glossary.md` — あれば
 
