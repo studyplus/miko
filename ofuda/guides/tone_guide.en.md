@@ -35,7 +35,7 @@ The separator in miko skill names is decided at install time: dot (`/miko.xxx`) 
 - `separator=dot` → write skill names with dots
 - `separator=hyphen` → write skill names with hyphens
 
-If the config cannot be read, match the separator used in the name of the skill you are currently running.
+If the config cannot be read or has no `separator` entry, default to dots.
 
 ---
 
