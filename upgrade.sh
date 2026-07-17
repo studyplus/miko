@@ -247,9 +247,6 @@ done
 # rm -rf は使わず、ofuda の中身を .miko/ にマージコピーする
 cp -r "$tmpdir/miko/ofuda/." .miko/
 
-# miko 管理スキルの正規名一覧を保存する（switch_separator.sh が参照する）
-printf '%s\n' "${latest_skills[@]}" > .miko/skills_manifest
-
 # 言語設定に応じて tone_guide を解決する（config がない既存インストールは ja として config を作成）
 if [ ! -f ".miko/config" ]; then
   echo "language=$LANG_CHOICE" > .miko/config

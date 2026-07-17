@@ -31,7 +31,7 @@ esac
 # スキル名の区切り文字選択: 対話プロンプト > デフォルト -
 # 一部の LLM プラットフォームは Agent Skills 準拠のハイフン区切りの名前しか使えないため、
 # どこでも動くハイフン区切り (miko-setup) をデフォルトとし、ドット区切り (miko.setup) も選択できる。
-# インストール後の変更は .miko/switch_separator.sh で行える
+# インストール後に変更する場合は、miko を削除して再インストールする
 SEP="-"
 if [ -t 0 ]; then
   if [ "$LANG_CHOICE" = "en" ]; then
@@ -102,9 +102,6 @@ for s in "${canonical_skills[@]}"; do
   cp -r "$tmpdir/miko/skills/$s" "$SKILLS_DIR/$(to_local "$s")"
 done
 cp -r "$tmpdir"/miko/ofuda .miko
-
-# miko 管理スキルの正規名一覧を保存する（switch_separator.sh が参照する）
-printf '%s\n' "${canonical_skills[@]}" > .miko/skills_manifest
 
 # 言語・区切り文字設定の保存と tone_guide の解決
 # リポジトリには tone_guide.md (ja) と tone_guide.en.md があり、
