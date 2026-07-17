@@ -28,6 +28,32 @@ case "$LANG_CHOICE" in
   *) LANG_CHOICE="ja" ;;
 esac
 
+# スキル名の区切り文字: 一部の LLM プラットフォームは Agent Skills 準拠の
+# ハイフン区切りの名前しか使えないため、どこでも動くハイフン区切り (miko-setup) で配置する。
+# ドット区切り (miko.setup) への変更は初回の setup スキル実行時に確認される。
+# MIKO_SEPARATOR 環境変数 (./-) で明示した場合は確認済みとして扱い、確認をスキップする。
+case "${MIKO_SEPARATOR:-}" in
+  .) SEP="." ; SEP_CONFIRMED=1 ;;
+  -) SEP="-" ; SEP_CONFIRMED=1 ;;
+  *) SEP="-" ; SEP_CONFIRMED=0 ;;
+esac
+
+# to_local <name> — 正規スキル名（. 区切り）を選択された区切り文字の名前に変換する
+to_local() { echo "${1//./$SEP}"; }
+
+# rewrite_skill_refs <path>... — ファイル中のスキル名参照 (miko.foo) を選択された区切り文字に書き換える
+rewrite_skill_refs() {
+  [ "$SEP" = "." ] && return 0
+  local sed_script="" name esc
+  for name in "${canonical_skills[@]}"; do
+    esc="${name//./\\.}"
+    sed_script="${sed_script}s/${esc}/$(to_local "$name")/g;"
+  done
+  find "$@" -type f -name '*.md' | while IFS= read -r f; do
+    sed -i.mikobak "$sed_script" "$f" && rm -f "$f.mikobak"
+  done
+}
+
 if [ "$LANG_CHOICE" = "en" ]; then
   echo "⛩️  Installing miko skills..."
 else
@@ -43,7 +69,7 @@ curl -fsSL "https://github.com/$REPO/archive/refs/heads/$BRANCH.tar.gz" | tar -x
 mkdir -p "$SKILLS_DIR"
 
 # 既存インストールの確認（VERSION ファイルまたは miko スキルが1つでもあれば既存とみなす）
-if [ -f ".miko/VERSION" ] || ls -d "$SKILLS_DIR"/miko.* &> /dev/null; then
+if [ -f ".miko/VERSION" ] || ls -d "$SKILLS_DIR"/miko.* &> /dev/null || ls -d "$SKILLS_DIR"/miko-* &> /dev/null; then
   if [ "$LANG_CHOICE" = "en" ]; then
     echo "⛩️  miko is already installed. Please use upgrade.sh to update:"
   else
@@ -55,28 +81,45 @@ if [ -f ".miko/VERSION" ] || ls -d "$SKILLS_DIR"/miko.* &> /dev/null; then
   exit 0
 fi
 
-cp -r "$tmpdir"/miko/skills/miko.* "$SKILLS_DIR/"
+# 正規スキル名（. 区切り）の一覧を収集し、選択された区切り文字の名前で配置する
+canonical_skills=()
+for d in "$tmpdir"/miko/skills/miko.*/; do
+  canonical_skills+=("$(basename "$d")")
+done
+for s in "${canonical_skills[@]}"; do
+  cp -r "$tmpdir/miko/skills/$s" "$SKILLS_DIR/$(to_local "$s")"
+done
 cp -r "$tmpdir"/miko/ofuda .miko
 
-# 言語設定の保存と tone_guide の解決
+# miko 管理スキルの正規名一覧を保存する（switch_separator.sh が参照する）
+printf '%s\n' "${canonical_skills[@]}" > .miko/skills_manifest
+
+# 言語・区切り文字設定の保存と tone_guide の解決
 # リポジトリには tone_guide.md (ja) と tone_guide.en.md があり、
 # 選択された言語のものを .miko/guides/tone_guide.md として配置する
-echo "language=$LANG_CHOICE" > .miko/config
+{
+  echo "language=$LANG_CHOICE"
+  echo "separator=$SEP"
+  echo "separator_confirmed=$SEP_CONFIRMED"
+} > .miko/config
 if [ "$LANG_CHOICE" = "en" ]; then
   cp .miko/guides/tone_guide.en.md .miko/guides/tone_guide.md
 fi
 rm -f .miko/guides/tone_guide.en.md
 
+# ハイフン区切りの場合、配置済みファイル内のスキル名参照を書き換える
+rewrite_skill_refs .miko "$SKILLS_DIR"/miko"$SEP"*
+
 if [ ! -f ".miko/protected_skills" ]; then
-cat > .miko/protected_skills << 'EOF'
+cat > .miko/protected_skills << EOF
 # miko アップグレード時に削除・上書きされないスキルを1行ずつ指定します。
-# miko.* という名前でご自身のカスタムスキルを作成している場合に使用してください。
+# miko${SEP}* という名前でご自身のカスタムスキルを作成している場合に使用してください。
 # (Skills listed here, one per line, are preserved across miko upgrades.
-#  Use this if you have created custom skills named miko.*.)
+#  Use this if you have created custom skills named miko${SEP}*.)
 #
 # 例 / Example:
-# miko.my-custom-skill
-# miko.another-skill
+# miko${SEP}my-custom-skill
+# miko${SEP}another-skill
 EOF
 fi
 
@@ -85,12 +128,12 @@ if [ "$LANG_CHOICE" = "en" ]; then
 else
   echo "✨ miko スキルをお納めいたしました: $SKILLS_DIR/"
 fi
-ls -1d "$SKILLS_DIR"/miko.* .miko 2>/dev/null | while read -r d; do
+ls -1d "$SKILLS_DIR"/miko"$SEP"* .miko 2>/dev/null | while read -r d; do
   echo "  - $(basename "$d")"
 done
 echo ""
 if [ "$LANG_CHOICE" = "en" ]; then
-  echo "⛩️  Start with /miko.setup to set up your project. If in doubt, ask /miko.miko."
+  echo "⛩️  Start with /miko${SEP}setup to set up your project. If in doubt, ask /miko${SEP}miko."
 else
-  echo "⛩️  まずは /miko.setup でプロジェクトのセットアップを。迷ったら /miko.miko にお聞きくださいませ。"
+  echo "⛩️  まずは /miko${SEP}setup でプロジェクトのセットアップを。迷ったら /miko${SEP}miko にお聞きくださいませ。"
 fi

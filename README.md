@@ -70,6 +70,21 @@ bash <(curl -fsSL https://raw.githubusercontent.com/studyplus/miko/main/install.
 MIKO_LANG=en bash <(curl -fsSL https://raw.githubusercontent.com/studyplus/miko/main/install.sh)
 ```
 
+スキル名は、一部の LLM プラットフォームが [Agent Skills](https://agentskills.io/) 準拠のハイフン区切りの名前しか使えないため、どこでも動作するハイフン区切り（`/miko-setup`）で配置されます。Claude Code などドット区切り（`/miko.setup`）が使えるプラットフォームでは、初回の setup スキル実行時にどちらを使うか確認され、ドット区切りへ変更できます。以下のスクリプトでいつでも切り替えられます。
+
+```bash
+bash .miko/switch_separator.sh .   # ドット区切り (/miko.setup) へ
+bash .miko/switch_separator.sh -   # ハイフン区切り (/miko-setup) へ
+```
+
+環境変数で区切り文字を明示した場合、初回の確認はスキップされます。
+
+```bash
+MIKO_SEPARATOR=. bash <(curl -fsSL https://raw.githubusercontent.com/studyplus/miko/main/install.sh)
+```
+
+本 README のスキル名はドット区切りで表記しています。ハイフン区切りをお使いの場合は `/miko-setup` のように読み替えくださいませ。
+
 インストール後、プロジェクトのセットアップを行います。
 
 ```bash
@@ -98,7 +113,7 @@ miko.my-custom-skill
 miko.another-skill
 ```
 
-アップグレード時にプロテクト済みスキルは更新対象から除外され、削除・上書きされません。
+アップグレード時にプロテクト済みスキルは更新対象から除外され、削除・上書きされません。ハイフン区切りを選択している場合は `miko-my-custom-skill` のようにハイフン区切りで記述くださいませ。
 
 ### 使い方
 
