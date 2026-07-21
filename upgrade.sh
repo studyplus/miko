@@ -126,7 +126,8 @@ if [ ${#migration_files[@]} -gt 0 ]; then
     echo "  ⛩️  $ts ..."
     # $MIKO_LATEST をマイグレーションプロンプト内のパス参照用に展開する
     prompt=$(cat "$f" | sed "s|\$MIKO_LATEST|$tmpdir/miko|g")
-    if ! claude -p "$prompt" --allowedTools "Edit,Read,Write,Glob,Grep"; then
+    # < /dev/null: claude がスクリプトの stdin（後続の確認プロンプト用の入力）を消費しないようにする
+    if ! claude -p "$prompt" --allowedTools "Edit,Read,Write,Glob,Grep" < /dev/null; then
       say "  ❌ $ts でエラーが発生しました。中断いたします。" \
           "  ❌ Migration $ts failed. Aborting."
       exit 1
