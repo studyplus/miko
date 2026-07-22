@@ -10,9 +10,9 @@ $ARGUMENTS
 
 入力の形式: `<capability_name> <概要（自由記述、省略可）>`
 
-- 例: `/miko.new_cap order_management 注文の作成・決済・キャンセルを管理する`
-- 例: `/miko.new_cap notification`
-- 空の場合はエラー: 「⛩️  ケイパビリティ名をお願いいたします（例: `/miko.new_cap order_management 注文管理`）」
+- 例: `/miko.new-cap order_management 注文の作成・決済・キャンセルを管理する`
+- 例: `/miko.new-cap notification`
+- 空の場合はエラー: 「⛩️  ケイパビリティ名をお願いいたします（例: `/miko.new-cap order_management 注文管理`）」
 
 ---
 
@@ -28,7 +28,7 @@ $ARGUMENTS
 
 **catchup との違い:**
 
-| 観点 | miko.new_cap | miko.catchup |
+| 観点 | miko.new-cap | miko.catchup |
 |------|-----------|---------------|
 | 用途 | 新規作成 | 既存ドキュメントの更新 |
 | 前提 | ドキュメントがまだない | ドキュメントが既にある |
@@ -249,4 +249,4 @@ HLD の骨子（`.miko/examples/high_level_design.md` と同等の構造）を�
 
 ### 12. 完了報告
 
-生成したファイル、ルール総数（制約/導出の内訳、実装済み/未実装）、暗黙のルール数、未決事項数をサマリーテーブルで提示する。次のアクションとして `/miko.new_harae` によるルール検証をお勧めする。
+生成したファイル、ルール総数（制約/導出の内訳、実装済み/未実装）、暗黙のルール数、未決事項数をサマリーテーブルで提示する。次のアクションとして `/miko.new-harae` によるルール検証をお勧めする。

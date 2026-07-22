@@ -10,8 +10,8 @@ $ARGUMENTS
 
 入力の形式: `<proposal_path>`
 
-- 例: `/miko.split_proposal miko/order_management/proposals/2026-03-18-cancel-notify.md`
-- 空の場合はエラー: 「⛩️  プロポーザルのパスをお願いいたします（例: `/miko.split_proposal miko/order_management/proposals/2026-03-18-cancel-notify.md`）」
+- 例: `/miko.split-proposal miko/order_management/proposals/2026-03-18-cancel-notify.md`
+- 空の場合はエラー: 「⛩️  プロポーザルのパスをお願いいたします（例: `/miko.split-proposal miko/order_management/proposals/2026-03-18-cancel-notify.md`）」
 
 ---
 
@@ -26,7 +26,7 @@ $ARGUMENTS
 ```
 /miko.propose → proposal 作成
 /miko.harae → proposal 検証（推奨）
-/miko.split_proposal → 親 + サブに分割
+/miko.split-proposal → 親 + サブに分割
 → 各サブに対して /miko.speckit.specify → 実装フロー
 ```
 
@@ -50,8 +50,8 @@ $ARGUMENTS
 
 **読み込むファイル:**
 - `.miko/guides/tone_guide.md` — 対話スタイル。**このファイルの口調・絵文字・出力言語ルールに従うこと**
-- `.claude/skills/miko.split_proposal/examples/umbrella_proposal.md` — 親プロポーザルのサンプル
-- `.claude/skills/miko.split_proposal/examples/cross_capability_sub_proposal.md` — 横断サブプロポーザルのサンプル（横断分割の場合）
+- `.claude/skills/miko.split-proposal/examples/umbrella_proposal.md` — 親プロポーザルのサンプル
+- `.claude/skills/miko.split-proposal/examples/cross_capability_sub_proposal.md` — 横断サブプロポーザルのサンプル（横断分割の場合）
 - 指定されたプロポーザルファイル
 - `miko/system_high_level_design.md` — ケイパビリティ一覧の確認（cross-cap 分割時に使用）
 - 横断分割の場合: 影響先ケイパビリティの `business_rules.md` と `high_level_design.md` も読み込む
@@ -128,14 +128,14 @@ $ARGUMENTS
 - 内容は「他ケイパビリティへの影響」セクションの該当部分から抽出する
 - **背景**（親プロポーザルへの `miko/` からの相対パスリンク）と**ビジネスルールの変更**（新設/改訂/廃止）のみ。機能仕様・影響範囲は不要
 - 祓え検証（元のプロポーザルに影響先ケイパビリティごとの祓え検証サブセクションがあれば、該当ケイパビリティ・該当フェーズ分を振り分け）
-- **サンプル:** `.claude/skills/miko.split_proposal/examples/cross_capability_sub_proposal.md` を参照
+- **サンプル:** `.claude/skills/miko.split-proposal/examples/cross_capability_sub_proposal.md` を参照
 
 **ファイル命名:**
 - 親: `YYYY-MM-DD-<slug>-umbrella.md`（メインケイパビリティの proposals/ ディレクトリ）
 - メインサブ: `YYYY-MM-DD-<slug>-phase<N>.md`（親と同ディレクトリ）
 - 影響先サブ: `YYYY-MM-DD-<slug>-phase<N>.md`（影響先ケイパビリティの proposals/ ディレクトリ。メインサブと同じフェーズ番号）
 
-**サンプル:** `.claude/skills/miko.split_proposal/examples/umbrella_proposal.md` を参照。
+**サンプル:** `.claude/skills/miko.split-proposal/examples/umbrella_proposal.md` を参照。
 
 ### 5. 元プロポーザルの削除提案
 
@@ -152,4 +152,4 @@ $ARGUMENTS
 - 親プロポーザルのパス
 - サブプロポーザル一覧（フェーズ番号、ケイパビリティ、概要、パス、BR 変更件数）
 - **クロスケイパビリティの場合:** 各フェーズの `/miko.speckit.specify` に渡すサブプロポーザルのパスをまとめて表示する（例: `/miko.speckit.specify path/to/cap_A/phase1.md path/to/cap_B/phase1.md`）
-- 次のアクションとして、各サブプロポーザルに対する `/miko.harae`（必要に応じて）と実装フロー（`/miko.speckit.specify` or `/miko.quick_impl`）をご案内する
+- 次のアクションとして、各サブプロポーザルに対する `/miko.harae`（必要に応じて）と実装フロー（`/miko.speckit.specify` or `/miko.quick-impl`）をご案内する

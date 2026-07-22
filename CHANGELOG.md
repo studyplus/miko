@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.4.0 (2026-07-17)
+
+### New
+
+- **スキル名の区切り文字（ハイフン / ドット）を選択可能に** — 一部の LLM プラットフォームは Agent Skills 準拠のハイフン区切りのスキル名しか使えないため、インストール時にどこでも動作するハイフン区切り（`/miko-setup`、デフォルト）とドット区切り（`/miko.setup`）を選択できるようにした。設定は `.miko/config` の `separator=` に保存され、スキルディレクトリ名とファイル内のスキル名参照（handoffs 含む）がインストール・アップグレード時に自動変換される。後から変更する場合は miko を削除して再インストールする。tone_guide に「出力でスキル名に言及するときは config の separator に従う」を明記
+
+### Changed
+
+- **スキル名のアンダースコアをハイフンに統一** — `miko.new_cap` → `miko.new-cap` のように、スキル名内の `_` を `-` に変更（対象: new-cap / new-harae / quick-catchup / quick-impl / split-proposal / catchup-system-hld）。ハイフン区切り選択時に `miko-new_harae` のような混在表記になるのを避けるため。既存インストールはアップグレード時に旧名スキルが削除され新名で再配置される
+
+### Fixed
+
+- **upgrade.sh が macOS 標準の bash 3.2 で中断する問題を修正** — `.miko/protected_skills` にプロテクト対象がない場合、`set -u` 下での空配列展開により処理が中断していた
+
 ## v1.3.2 (2026-06-26)
 
 ### Changed

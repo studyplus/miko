@@ -14,6 +14,29 @@ if [ -f ".miko/config" ]; then
   [ "$LANG_CHOICE" = "en" ] || LANG_CHOICE="ja"
 fi
 
+# スキル名の区切り文字設定: .miko/config の separator (dot/hyphen) を読む。なければ dot
+SEP="."
+if [ -f ".miko/config" ]; then
+  sep_val=$(grep -E '^separator=' .miko/config | head -n 1 | cut -d= -f2 | tr -d '[:space:]' || true)
+  [ "$sep_val" = "hyphen" ] && SEP="-"
+fi
+
+# to_local <name> — 正規スキル名（. 区切り）を設定された区切り文字の名前に変換する
+to_local() { echo "${1//./$SEP}"; }
+
+# rewrite_skill_refs <path>... — ファイル中のスキル名参照 (miko.foo) を設定された区切り文字に書き換える
+rewrite_skill_refs() {
+  [ "$SEP" = "." ] && return 0
+  local sed_script="" name esc
+  for name in "${latest_skills[@]}"; do
+    esc="${name//./\\.}"
+    sed_script="${sed_script}s/${esc}/$(to_local "$name")/g;"
+  done
+  find "$@" -type f -name '*.md' | while IFS= read -r f; do
+    sed -i.mikobak "$sed_script" "$f" && rm -f "$f.mikobak"
+  done
+}
+
 # say <ja> <en> — 言語設定に応じたメッセージを出力する
 say() {
   if [ "$LANG_CHOICE" = "en" ]; then echo "$2"; else echo "$1"; fi
@@ -32,7 +55,7 @@ if ! command -v claude &> /dev/null; then
 fi
 
 # miko がインストールされているか確認（VERSION ファイルまたは miko スキルの存在）
-if [ ! -f "$VERSION_FILE" ] && [ ! -f "$OLD_VERSION_FILE" ] && ! ls -d "$SKILLS_DIR"/miko.* &> /dev/null; then
+if [ ! -f "$VERSION_FILE" ] && [ ! -f "$OLD_VERSION_FILE" ] && ! ls -d "$SKILLS_DIR"/miko.* &> /dev/null && ! ls -d "$SKILLS_DIR"/miko-* &> /dev/null; then
   say "⛩️  miko がインストールされていません。install.sh で初回インストールをお願いいたします。" \
       "⛩️  miko is not installed. Please run install.sh for the initial installation."
   exit 1
@@ -103,7 +126,9 @@ if [ ${#migration_files[@]} -gt 0 ]; then
     echo "  ⛩️  $ts ..."
     # $MIKO_LATEST をマイグレーションプロンプト内のパス参照用に展開する
     prompt=$(cat "$f" | sed "s|\$MIKO_LATEST|$tmpdir/miko|g")
-    if ! claude -p "$prompt" --allowedTools "Edit,Read,Write,Glob,Grep"; then
+    # Bash はマイグレーション内に書かれたシェルスクリプトの実行用
+    # < /dev/null: claude がスクリプトの stdin（後続の確認プロンプト用の入力）を消費しないようにする
+    if ! claude -p "$prompt" --allowedTools "Edit,Read,Write,Glob,Grep,Bash" < /dev/null; then
       say "  ❌ $ts でエラーが発生しました。中断いたします。" \
           "  ❌ Migration $ts failed. Aborting."
       exit 1
@@ -121,7 +146,7 @@ if [ -d "$SKILLS_DIR/_miko" ]; then
   rm -rf "$SKILLS_DIR/_miko"
 fi
 
-# 最新版に存在する miko.* スキル名を収集
+# 最新版に存在する miko.* スキル名（正規名、. 区切り）を収集
 latest_skills=()
 for d in "$tmpdir"/miko/skills/miko.*/; do
   [ -d "$d" ] || continue
@@ -149,23 +174,26 @@ if [ ${#protected_skills[@]} -gt 0 ]; then
 fi
 
 # is_protected <name> — protected_skills に含まれるか判定するヘルパー
+# 空配列の展開は bash 3.2 の set -u でエラーになるため、先に件数を確認する
 is_protected() {
   local name="$1"
+  [ ${#protected_skills[@]} -eq 0 ] && return 1
   for p in "${protected_skills[@]}"; do
     [ "$p" = "$name" ] && return 0
   done
   return 1
 }
 
-# 最新版にない miko.* スキルのうち、プロテクト済みでないものを削除候補として収集
+# 最新版にないローカルの miko スキルのうち、プロテクト済みでないものを削除候補として収集
+# ローカルのスキル名は設定された区切り文字なので、正規名を to_local で変換して比較する
 removed_skills=()
-for d in "$SKILLS_DIR"/miko.*/; do
+for d in "$SKILLS_DIR"/miko"$SEP"*/; do
   [ -d "$d" ] || continue
   name=$(basename "$d")
   is_protected "$name" && continue
   found=false
   for s in "${latest_skills[@]}"; do
-    [ "$s" = "$name" ] && found=true && break
+    [ "$(to_local "$s")" = "$name" ] && found=true && break
   done
   [ "$found" = false ] && removed_skills+=("$name")
 done
@@ -205,14 +233,16 @@ if [ ${#removed_skills[@]} -gt 0 ]; then
 fi
 
 # miko 管理スキルを個別に更新（プロテクト済みはスキップ）
+# 配置先はローカル名（設定された区切り文字）
 for s in "${latest_skills[@]}"; do
-  if is_protected "$s"; then
-    say "  🔒 $s はプロテクト済みのためスキップいたします" \
-        "  🔒 $s is protected — skipping"
+  local_name=$(to_local "$s")
+  if is_protected "$local_name"; then
+    say "  🔒 $local_name はプロテクト済みのためスキップいたします" \
+        "  🔒 $local_name is protected — skipping"
     continue
   fi
-  rm -rf "${SKILLS_DIR:?}/$s"
-  cp -r "$tmpdir/miko/skills/$s" "$SKILLS_DIR/"
+  rm -rf "${SKILLS_DIR:?}/$local_name"
+  cp -r "$tmpdir/miko/skills/$s" "$SKILLS_DIR/$local_name"
 done
 
 # .miko/ を更新: ユーザー作成ファイル（protected_skills, config 等）を保持したまま上書き
@@ -227,6 +257,18 @@ if [ "$LANG_CHOICE" = "en" ] && [ -f ".miko/guides/tone_guide.en.md" ]; then
   cp .miko/guides/tone_guide.en.md .miko/guides/tone_guide.md
 fi
 rm -f .miko/guides/tone_guide.en.md
+
+# ハイフン区切りの場合、更新したファイル内のスキル名参照を書き換える
+# プロテクト済みスキルはユーザー管理のため書き換えない
+if [ "$SEP" != "." ]; then
+  rewrite_paths=(.miko)
+  for s in "${latest_skills[@]}"; do
+    local_name=$(to_local "$s")
+    is_protected "$local_name" && continue
+    rewrite_paths+=("$SKILLS_DIR/$local_name")
+  done
+  rewrite_skill_refs "${rewrite_paths[@]}"
+fi
 
 echo ""
 say "✨ miko を $latest_semver ($latest_ts) に更新いたしました" \

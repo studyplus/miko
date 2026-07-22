@@ -96,10 +96,10 @@ speckit は SDD のためではなく、**Claude に丁寧にコードベース�
 2. 検証フェーズ — harae で proposal 適用後のルール体系を攻撃的に検証（AI）
    /miko.harae <capability> <proposal>
    - 矛盾・穴・悪用耐性などを攻撃的に確かめる。指摘は proposal 内に記録
-   - 変更が大きい場合は harae の後に /miko.split_proposal で親 + サブに分割できる
+   - 変更が大きい場合は harae の後に /miko.split-proposal で親 + サブに分割できる
 
 3. 実装フェーズ — proposal に基づいて実装（AI）
-   - 基本: /miko.quick_impl（speckit を通さず直接実装）
+   - 基本: /miko.quick-impl（speckit を通さず直接実装）
    - 重い変更: speckit で仕様策定・実装
      /speckit.specify → /speckit.clarify → /speckit.plan → /speckit.tasks → /speckit.analyze → /speckit.implement
      - speckit の成果物は使い捨て。Claude に深く調査させるための道具
@@ -117,7 +117,7 @@ speckit は SDD のためではなく、**Claude に丁寧にコードベース�
     ↓
 検証: harae（AI が攻撃的に検証、指摘は proposal 内に記録）
     ↓
-実装: quick_impl / speckit（AI が実装）
+実装: quick-impl / speckit（AI が実装）
     ↓
 business_rules.md（AI が更新：ドメインの判断基準）
 high_level_design.md（AI が更新：構造の変化）
@@ -340,12 +340,12 @@ proposal は business_rules.md への変更提案ではなく、**ケイパビ�
 
 大きな変更を PR 単位でフェーズ分割して実装したい場合、親プロポーザル + サブプロポーザル方式を使う。
 
-**フロー:** `/miko.propose` で通常通り 1 本のプロポーザルを作成し、`/miko.harae` で検証した後、`/miko.split_proposal` で分割する。
+**フロー:** `/miko.propose` で通常通り 1 本のプロポーザルを作成し、`/miko.harae` で検証した後、`/miko.split-proposal` で分割する。
 
 ```
 /miko.propose → 1 本のプロポーザル作成
 /miko.harae → 検証（推奨。分割前にやると手戻りが少ない）
-/miko.split_proposal → 親（umbrella）+ サブに分割
+/miko.split-proposal → 親（umbrella）+ サブに分割
 → 各サブに対して /miko.speckit.specify → 実装フロー
 ```
 
@@ -381,7 +381,7 @@ miko/<other_capability>/proposals/
 
 ### 複数ケイパビリティにまたがる変更
 
-**決定（v0.6.0〜）:** umbrella/sub パターンに統一する。propose で横断影響を含む 1 本のプロポーザルを作成し、split_proposal で影響先ケイパビリティに影響先サブプロポーザルを作成する。implement は各サブの BR 変更に従って各ケイパビリティの business_rules.md を更新する。
+**決定（v0.6.0〜）:** umbrella/sub パターンに統一する。propose で横断影響を含む 1 本のプロポーザルを作成し、split-proposal で影響先ケイパビリティに影響先サブプロポーザルを作成する。implement は各サブの BR 変更に従って各ケイパビリティの business_rules.md を更新する。
 
 **フロー:**
 
@@ -391,9 +391,9 @@ miko/<other_capability>/proposals/
   → 「他ケイパビリティへの影響を調査しますか？」と確認
   → サブエージェントが business_rules.md 存在するケイパビリティを走査
   → 調査結果をもとに proposal の「他ケイパビリティへの影響」セクション + <needs-split> マーカーを付与
-  → 完了報告で /miko.split_proposal の実行を案内
+  → 完了報告で /miko.split-proposal の実行を案内
 
-/miko.split_proposal 時:
+/miko.split-proposal 時:
   → 「他ケイパビリティへの影響」セクションから影響先サブプロポーザルを作成
   → 影響先ケイパビリティの proposals/ に配置
   → 親プロポーザルのフェーズ構成に列挙（パスからケイパビリティが判別可能）

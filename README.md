@@ -46,13 +46,13 @@ miko はドキュメントを**ケイパビリティ単位**で整理いたし�
 
 ### その他の設計判断
 
-- **speckit はお調べの道具** — speckit の成果物は使い捨て。重い変更のとき、Claude に深くコードを読ませるための仕掛けとして使います。普段の実装は `/miko.quick_impl` で speckit を通さず行います
+- **speckit はお調べの道具** — speckit の成果物は使い捨て。重い変更のとき、Claude に深くコードを読ませるための仕掛けとして使います。普段の実装は `/miko.quick-impl` で speckit を通さず行います
 - **ドキュメントの役割分担** — ルールそのもの（結論）は `business_rules.md` に、なぜそう決めたか（経緯）は proposals に書きます
 
 ## 🌿 前提
 
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) がインストール済みであること
-- （Optional）[speckit](https://github.com/github/spec-kit) スキル — フルフロー（`/miko.speckit.*`）をお使いの場合のみ必要でございます。基本フローの `/miko.quick_impl` だけなら不要です
+- （Optional）[speckit](https://github.com/github/spec-kit) スキル — フルフロー（`/miko.speckit.*`）をお使いの場合のみ必要でございます。基本フローの `/miko.quick-impl` だけなら不要です
 
 ## ✨ インストール
 
@@ -69,6 +69,14 @@ bash <(curl -fsSL https://raw.githubusercontent.com/studyplus/miko/main/install.
 ```bash
 MIKO_LANG=en bash <(curl -fsSL https://raw.githubusercontent.com/studyplus/miko/main/install.sh)
 ```
+
+続けてスキル名の区切り文字の選択を求められます。一部の LLM プラットフォームは [Agent Skills](https://agentskills.io/) 準拠のハイフン区切りの名前しか使えないため、どこでも動作するハイフン区切り（`/miko-setup`）がデフォルトです。ドット区切りに対応したプラットフォームではドット区切り（`/miko.setup`）も選べます。後から変更する場合は、miko を削除して再インストールくださいませ。
+
+```bash
+rm -rf .claude/skills/miko.* .claude/skills/miko-* .miko   # 削除して再インストール
+```
+
+本 README のスキル名はドット区切りで表記しています。ハイフン区切りをお使いの場合は `/miko-setup` のように読み替えくださいませ。
 
 インストール後、プロジェクトのセットアップを行います。
 
@@ -98,7 +106,7 @@ miko.my-custom-skill
 miko.another-skill
 ```
 
-アップグレード時にプロテクト済みスキルは更新対象から除外され、削除・上書きされません。
+アップグレード時にプロテクト済みスキルは更新対象から除外され、削除・上書きされません。ハイフン区切りを選択している場合は `miko-my-custom-skill` のようにハイフン区切りで記述くださいませ。
 
 ### 使い方
 
@@ -127,11 +135,11 @@ miko/
 
 | ファイル | 役割 | メンテ |
 |---|---|---|
-| `system_high_level_design.md` | システム全体のアーキテクチャ。コード探索ガイドを含む | `/miko.setup` で生成、`/miko.catchup_system_hld` で追従 |
+| `system_high_level_design.md` | システム全体のアーキテクチャ。コード探索ガイドを含む | `/miko.setup` で生成、`/miko.catchup-system-hld` で追従 |
 | `glossary.md` | 用語の定義（ケイパビリティごとのセクションで管理） | miko がメンテ |
 | `business_rules.md` | ドメインの判断基準。コードからは読み取れない「なぜ」を記録 | miko がメンテ |
 | `high_level_design.md` | ケイパビリティの構造と全体像 | miko がメンテ |
-| `harae.md` | 攻撃的検証の指摘リストとステータス管理 | `/miko.new_harae` が生成、`/miko.harae` が更新 |
+| `harae.md` | 攻撃的検証の指摘リストとステータス管理 | `/miko.new-harae` が生成、`/miko.harae` が更新 |
 | `proposals/` | ケイパビリティへの変更提案と経緯 | 主さまが元ネタを出し、miko と相談しながら書く |
 
 ## ⛩️  スキル一覧
@@ -148,25 +156,25 @@ miko/
 | スキル | 用途 |
 |---|---|
 | `/miko.setup [概要]` | プロジェクトに miko を導入。コードベースをお調べし `miko/system_high_level_design.md` を生成 |
-| `/miko.catchup_system_hld` | `system_high_level_design.md` をコードベースの現状に追従。ディレクトリ構成の乖離を検出・更新 |
+| `/miko.catchup-system-hld` | `system_high_level_design.md` をコードベースの現状に追従。ディレクトリ構成の乖離を検出・更新 |
 
 ### ドキュメント作成
 
 | スキル | 用途 |
 |---|---|
-| `/miko.new_cap <capability> [概要]` | 新規ケイパビリティの business_rules.md と high_level_design.md を対話しながら作成。既存コードがあれば活用 |
+| `/miko.new-cap <capability> [概要]` | 新規ケイパビリティの business_rules.md と high_level_design.md を対話しながら作成。既存コードがあれば活用 |
 | `/miko.catchup <capability>` | 既存の business_rules.md と high_level_design.md をコード全体と突き合わせて追従 |
-| `/miko.quick_catchup <capability> [diff]` | コード変更（git diff / PR）から proposal を作成し BR/HLD を更新。緊急 FIX 後などに |
+| `/miko.quick-catchup <capability> [diff]` | コード変更（git diff / PR）から proposal を作成し BR/HLD を更新。緊急 FIX 後などに |
 | `/miko.propose <capability> [元ネタ]` | 変更プロポーザルを対話しながら作成 |
-| `/miko.split_proposal <proposal>` | プロポーザルを親（umbrella）+ サブにフェーズ分割 |
-| `/miko.new_harae <capability>` | ビジネスルールの初回攻撃的検証。harae.md をゼロから生成 |
+| `/miko.split-proposal <proposal>` | プロポーザルを親（umbrella）+ サブにフェーズ分割 |
+| `/miko.new-harae <capability>` | ビジネスルールの初回攻撃的検証。harae.md をゼロから生成 |
 | `/miko.harae <capability> [proposal]` | 既存 harae.md の棚卸し・差分探索。proposal 付きなら proposal 内に検証結果を記録 |
 
 ### 実装（基本フロー）
 
 | スキル | 用途 |
 |---|---|
-| `/miko.quick_impl <proposal \| capability \| 変更指示>` | 変更を speckit を通さず直接実装する基本フロー。proposal なしの変更指示（リファクタリング等）も受け付ける。BR 本文の変更を伴う場合は proposal が必要。スコープを超える重い変更はフルフローにご誘導 |
+| `/miko.quick-impl <proposal \| capability \| 変更指示>` | 変更を speckit を通さず直接実装する基本フロー。proposal なしの変更指示（リファクタリング等）も受け付ける。BR 本文の変更を伴う場合は proposal が必要。スコープを超える重い変更はフルフローにご誘導 |
 
 ### 実装（フルフロー — speckit 拡張、重い変更向け）
 
@@ -193,10 +201,10 @@ speckit がインストールされている場合のみ使えます。
 ### 新規ケイパビリティの定義
 
 ```
-/miko.new_cap <capability>
+/miko.new-cap <capability>
   → 対話しながら business_rules.md + high_level_design.md を作成
 
-/miko.new_harae <capability>
+/miko.new-harae <capability>
   → 定義したルールの矛盾・穴を攻撃的に検証。harae.md を生成
 
 → 指摘を修正したら /miko.harae <capability> で再検証をお勧めする
@@ -220,14 +228,14 @@ speckit がインストールされている場合のみ使えます。
   → proposal 適用後のルール体系を攻撃的に検証。指摘は proposal 内に記録
 
 # Optional
-/miko.split_proposal <proposal>
+/miko.split-proposal <proposal>
   → 変更が大きい場合のみ、親（umbrella）+ サブにフェーズ分割（harae の後に実施）
 ```
 
-**実装フェーズ（基本: quick_impl）**
+**実装フェーズ（基本: quick-impl）**
 
 ```
-/miko.quick_impl <capability>
+/miko.quick-impl <capability>
   → speckit を通さず直接実装（単一の意図・既存構造の範囲内の変更が対象）
   → 実装後、business_rules.md + high_level_design.md + harae.md を自動更新
   → スコープを超える場合はフルフローにご誘導
@@ -262,10 +270,10 @@ speckit がインストールされている場合のみ使えます。
 
 ### proposal を通さないリファクタリング
 
-ビジネスルール本文を変えない変更（リネーム・移動・責務の再配置等）は、proposal を通さず `/miko.quick_impl` に変更指示を直接渡して実装できる。
+ビジネスルール本文を変えない変更（リネーム・移動・責務の再配置等）は、proposal を通さず `/miko.quick-impl` に変更指示を直接渡して実装できる。
 
 ```
-/miko.quick_impl <変更指示>
+/miko.quick-impl <変更指示>
   → 実装後、影響する実装マッピングを全ケイパビリティ横断で自動更新
   → BR 本文の変更が必要と判定された場合は /miko.propose にご誘導
   → スコープ（意図の単一性・影響範囲の明瞭さ・機械性 or 局所性）を超える場合はフルフローにご誘導
@@ -275,7 +283,7 @@ speckit がインストールされている場合のみ使えます。
 
 ```
 # system_high_level_design.md の追従
-/miko.catchup_system_hld
+/miko.catchup-system-hld
   → ディレクトリ構成の乖離を検出し、system_high_level_design.md を更新
 
 # フルスキャン（ケイパビリティ全体を突き合わせ）
@@ -283,16 +291,16 @@ speckit がインストールされている場合のみ使えます。
   → コード全体と BR/HLD を突き合わせて差分を検出・更新
 
 # 差分ベース（特定のコード変更だけ反映）
-/miko.quick_catchup <capability>
+/miko.quick-catchup <capability>
   → カレントブランチの diff から proposal 作成 + BR/HLD 更新
 
-/miko.quick_catchup <capability> #8250
+/miko.quick-catchup <capability> #8250
   → PR の diff から proposal 作成 + BR/HLD 更新
 ```
 
 ## 🌾 実装時の品質改善
 
-`/miko.quick_impl` は実装後に、`/miko.speckit.implement` は機能ごとに、以下のセルフレビューを自動実行いたします:
+`/miko.quick-impl` は実装後に、`/miko.speckit.implement` は機能ごとに、以下のセルフレビューを自動実行いたします:
 
 1. **セルフレビュー** -- 責務の配置、命名、フレームワーク規約のチェック
 2. **/simplify** -- コードの重複・品質・効率のチェック

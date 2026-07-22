@@ -46,10 +46,10 @@
 ### 新規ケイパビリティの場合
 
 ```
-/miko.new_cap <capability>
+/miko.new-cap <capability>
   → 対話しながら business_rules.md + high_level_design.md を作成
 
-/miko.new_harae <capability>
+/miko.new-harae <capability>
   → 初回の攻撃的検証。harae.md を生成（推奨）
 
 → 指摘を修正したら /miko.harae <capability> で再検証をお勧めする
@@ -67,7 +67,7 @@
    → proposal 適用後のルール体系を攻撃的に検証。指摘は proposal 内に記録される
 
 3. 実装する
-   基本: /miko.quick_impl <capability | proposal>
+   基本: /miko.quick-impl <capability | proposal>
    → speckit を通さず直接実装（単一の意図・既存構造の範囲内の変更が対象）
 
    重い変更（複数の意図が絡む、影響範囲の見極めに探索が要る、処理構造が大きく動く）は speckit フロー:
@@ -81,14 +81,14 @@
    → harae.md を更新（proposal の「祓え検証」セクションがあれば適用）
 ```
 
-**フェーズ分割:** 変更が大きい場合、`/miko.split_proposal` でプロポーザルを親（umbrella）+ サブにフェーズ分割できる。
+**フェーズ分割:** 変更が大きい場合、`/miko.split-proposal` でプロポーザルを親（umbrella）+ サブにフェーズ分割できる。
 
 ### ドキュメントの流れ
 
 ```
 proposal（人が元ネタを出し、AI と相談しながら書く）
     ↓
-実装（基本は quick_impl で直接実装。重い変更は speckit が使い捨て仕様を作って実装）
+実装（基本は quick-impl で直接実装。重い変更は speckit が使い捨て仕様を作って実装）
     ↓
 business_rules.md（AI が更新：ドメインの判断基準）
 high_level_design.md（AI が更新：構造の変化）
