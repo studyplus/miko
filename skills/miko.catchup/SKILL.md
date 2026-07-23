@@ -164,7 +164,7 @@ $ARGUMENTS
 
 **glossary.md の更新:**
 - proposal で新しい用語が登場した場合は `miko/glossary.md` に追加する（ファイルがなければ作成）
-- `.miko/examples/glossary.md` のフォーマットに従い、該当ケイパビリティのセクションに追加する
+- `.miko/examples/glossary.md` のフォーマットに従い、該当ケイパビリティのセクションに追加する。実装の詳細（クラス名・メソッド名・API・処理手順）は書かず、1〜2文の定義だけを書く
 
 ### 12. high_level_design.md 更新
 

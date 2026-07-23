@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.4.1 (2026-07-23)
+
+### Fixed
+
+- **glossary.md に実装の詳細が書かれてしまう問題を修正** — 用語集の項目にクラス名・メソッド名・API・処理手順まで書かれ、実装変更のたびに追従が必要になっていた。`.miko/examples/glossary.md` に「実装技術を置き換えても定義文は変わらないか」という判定テストと悪い例/良い例を追記し、`/miko.setup`・`/miko.new-cap`・`/miko.catchup`・`/miko.quick-catchup`・`/miko.propose` の glossary.md 更新手順にも「実装の詳細は書かず1〜2文の定義だけを書く」旨を明記
+
 ## v1.4.0 (2026-07-17)
 
 ### New

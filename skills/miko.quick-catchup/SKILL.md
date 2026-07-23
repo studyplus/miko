@@ -115,7 +115,7 @@ diff ソース、変更の要約、ビジネスルールへの影響（新設/�
 **ステップ 6 で生成した proposal の内容を business_rules.md に反映する。**
 - proposal の新設・改訂を適用する
 - 実装マッピングを更新する
-- 新しい用語があれば `miko/glossary.md` に追加する（`.miko/examples/glossary.md` のフォーマットに従う）
+- 新しい用語があれば `miko/glossary.md` に追加する（`.miko/examples/glossary.md` のフォーマットに従う。実装の詳細は書かず、1〜2文の定義だけを書く）
 
 ### 8. high_level_design.md 更新
 
