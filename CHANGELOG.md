@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.5.0 (2026-07-23)
+
+### New
+
+- **glossary.md の生成指示書（`glossary_guide.md`）を追加** — 用語集の項目が実装の詳細（クラス名・メソッド名・API・処理手順）まで書かれてしまい、実装変更のたびに追従が必要になる問題に対処。「実装技術を置き換えても定義文は変わらないか」という判定テストと、書くもの/書かないものの対比表、1〜2文に収める長さの目安を明文化。`.miko/examples/glossary.md` にも簡潔な定義のみを書く旨を明記し、`/miko.setup`・`/miko.new-cap`・`/miko.catchup`・`/miko.quick-catchup`・`/miko.propose` の glossary.md 更新手順から参照するようにした
+
 ## v1.4.0 (2026-07-17)
 
 ### New

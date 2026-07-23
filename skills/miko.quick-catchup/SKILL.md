@@ -53,6 +53,7 @@ miko フローを通さずに入ったコード変更（緊急 FIX 等）を、�
 
 **読み込むファイル:**
 - `.miko/guides/business_rules_guide.md` — ルールの書き方、判定テスト
+- `.miko/guides/glossary_guide.md` — glossary.md の生成ルール。実装の詳細を書かない原則
 - `.miko/guides/tone_guide.md` — 対話スタイル。**このファイルの口調・絵文字・出力言語ルールに従うこと**
 - `miko/system_high_level_design.md` — コード探索ガイド（着目点の参照）
 - `miko/<capability>/business_rules.md` — 現在のビジネスルール。**存在しない場合はエラー:**
@@ -115,7 +116,7 @@ diff ソース、変更の要約、ビジネスルールへの影響（新設/�
 **ステップ 6 で生成した proposal の内容を business_rules.md に反映する。**
 - proposal の新設・改訂を適用する
 - 実装マッピングを更新する
-- 新しい用語があれば `miko/glossary.md` に追加する（`.miko/examples/glossary.md` のフォーマットに従う）
+- 新しい用語があれば `miko/glossary.md` に追加する（`.miko/guides/glossary_guide.md` に従う。実装の詳細は書かず、`.miko/examples/glossary.md` のフォーマットで 1〜2文の定義だけを書く）
 
 ### 8. high_level_design.md 更新
 
