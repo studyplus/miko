@@ -43,7 +43,6 @@ $ARGUMENTS
 
 **指示書（必須）:**
 - `.miko/guides/business_rules_guide.md` — business_rules.md の生成ルール。**このファイルの指示に厳密に従うこと**
-- `.miko/guides/glossary_guide.md` — glossary.md の生成ルール。実装の詳細を書かない原則
 - `.miko/guides/tone_guide.md` — ユーザーとの対話スタイル。**このファイルの口調・絵文字・出力言語ルールに従うこと**
 
 **システム全体の文脈:**
@@ -165,8 +164,7 @@ $ARGUMENTS
 
 **glossary.md の更新:**
 - proposal で新しい用語が登場した場合は `miko/glossary.md` に追加する（ファイルがなければ作成）
-- `.miko/guides/glossary_guide.md` に従う。実装の詳細（クラス名・メソッド名・API・処理手順）は書かず、1〜2文の定義だけを書く
-- `.miko/examples/glossary.md` のフォーマットに従い、該当ケイパビリティのセクションに追加する
+- `.miko/examples/glossary.md` のフォーマットに従い、該当ケイパビリティのセクションに追加する。実装の詳細（クラス名・メソッド名・API・処理手順）は書かず、1〜2文の定義だけを書く
 
 ### 12. high_level_design.md 更新
 

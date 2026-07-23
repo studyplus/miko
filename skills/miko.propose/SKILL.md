@@ -42,7 +42,6 @@ $ARGUMENTS
 
 **指示書（必須）:**
 - `.miko/guides/business_rules_guide.md` — ルール記述の原則。判定テストの方法
-- `.miko/guides/glossary_guide.md` — glossary.md の生成ルール。実装の詳細を書かない原則
 - `.miko/guides/tone_guide.md` — ユーザーとの対話スタイル。**このファイルの口調・絵文字・出力言語ルールに従うこと**
 
 **実例（品質の基準）:**
@@ -198,8 +197,7 @@ business_rules.md が存在するケイパビリティを対象に、サブエ�
 
 **glossary.md の更新:**
 - proposal で新しい用語が登場した場合は `miko/glossary.md` に追加する（ファイルがなければ作成）
-- `.miko/guides/glossary_guide.md` に従う。実装の詳細（クラス名・メソッド名・API・処理手順）は書かず、1〜2文の定義だけを書く
-- `.miko/examples/glossary.md` のフォーマットに従い、該当ケイパビリティのセクションに追加する
+- `.miko/examples/glossary.md` のフォーマットに従い、該当ケイパビリティのセクションに追加する。実装の詳細（クラス名・メソッド名・API・処理手順）は書かず、1〜2文の定義だけを書く
 
 ### 11. 完了報告
 
