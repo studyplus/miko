@@ -136,7 +136,7 @@ miko/
 | ファイル | 役割 | メンテ |
 |---|---|---|
 | `system_high_level_design.md` | システム全体のアーキテクチャ。コード探索ガイドを含む | `/miko.setup` で生成、`/miko.catchup-system-hld` で追従 |
-| `glossary.md` | 用語の定義（ケイパビリティごとのセクションで管理。見出し語はシステム全体で一意） | miko がメンテ |
+| `glossary.md` | 用語の定義（ケイパビリティごとのセクションで整理。セクションは配置の軸で、見出し語はシステム全体で一意） | miko がメンテ |
 | `business_rules.md` | ドメインの判断基準。コードからは読み取れない「なぜ」を記録 | miko がメンテ |
 | `high_level_design.md` | ケイパビリティの構造と全体像 | miko がメンテ |
 | `harae.md` | 攻撃的検証の指摘リストとステータス管理 | `/miko.new-harae` が生成、`/miko.harae` が更新 |
