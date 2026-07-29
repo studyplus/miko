@@ -290,6 +290,8 @@ An existing `business_rules.md` is never brought up to the current standard unle
   → Phase B: safe rewording (removing code vocabulary and rationale, moving ADRs to the HLD)
   → Phase C: split/merge proposals (rule IDs move here; you decide the ID mapping)
   → Phase D: cross-capability checks (boundaries, duplication, homonyms, ownership — detection only)
+  → Record: when rule text or IDs moved, records the applied refactoring as a proposal
+     (also where rationale and rejected alternatives removed from the rule text go)
 
 /miko.refine-br <capability> C
   → Resume from a later phase (you may stop at any confirmation gate)
