@@ -169,6 +169,7 @@ miko/
 | `/miko.split-proposal <proposal>` | Splits a proposal into an umbrella (parent) + sub-proposals by phase |
 | `/miko.new-harae <capability>` | First adversarial verification of the business rules. Generates harae.md from scratch |
 | `/miko.harae <capability> [proposal]` | Reviews and extends an existing harae.md. With a proposal, records the findings inside the proposal |
+| `/miko.refine-br <capability> [phase]` | Refactors an existing business_rules.md up to the current standard without changing any judgment: format modernization → safe rewording → split/merge proposals → cross-capability checks, with a confirmation gate after each phase |
 
 ### Implementation (standard flow)
 
@@ -278,6 +279,23 @@ Changes that do not alter business-rule text (renames, moves, redistributing res
   → If a BR text change turns out to be needed, you are guided to /miko.propose
   → If the change exceeds the scope (single intent, clear impact, mechanical or local), you are guided to the full flow
 ```
+
+### Rewriting existing BRs (refactoring)
+
+An existing `business_rules.md` is never brought up to the current standard unless you explicitly ask for the migration. `/miko.refine-br` is that entry point. It **never changes a domain judgment** — only the wording and the placement.
+
+```
+/miko.refine-br <capability>
+  → Phase A: format modernization (policy section, 2.1/2.2 split, numbering comments)
+  → Phase B: safe rewording (removing code vocabulary and rationale, moving ADRs to the HLD)
+  → Phase C: split/merge proposals (rule IDs move here; you decide the ID mapping)
+  → Phase D: cross-capability checks (boundaries, duplication, homonyms, ownership — detection only)
+
+/miko.refine-br <capability> C
+  → Resume from a later phase (you may stop at any confirmation gate)
+```
+
+Anything that would change a judgment (rules that contradict the implementation, rules that need deleting) is routed to `/miko.propose`.
 
 ### Catching documents up with the code
 
