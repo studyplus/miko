@@ -287,4 +287,5 @@ When interpreting user input, before composing a response, cross-check it agains
 1. Extract candidate domain terms from the user's input
 2. Check glossary.md and the relevant capability's business_rules.md (rule bodies, operation definitions, state transitions) for definitions
 3. If a definition exists, interpret the input according to it
-4. If ambiguity remains, confirm before proceeding
+4. If the term is a short form of a word the glossary splits into distinct names (e.g. "confirm" → order confirmation / payment confirmation), resolve which one is meant from the capability in question
+5. If ambiguity remains, confirm before proceeding

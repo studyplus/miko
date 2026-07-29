@@ -60,7 +60,7 @@ speckit は SDD のためではなく、**Claude に丁寧にコードベース�
 | ファイル | 役割 |
 |---|---|
 | `miko/system_high_level_design.md` | システム全体のアーキテクチャ（テナント構造、API 構造、コード探索ガイド等） |
-| `miko/glossary.md` | 用語の定義。ケイパビリティごとのセクションに分けて管理する |
+| `miko/glossary.md` | 用語の定義。整理の単位としてケイパビリティごとのセクションに分けるが、セクションは配置の軸であって意味のスコープではない。見出し語はシステム全体で一意にする（同じ語が別概念を指すなら別名を立てる） |
 | `ofuda/guides/business_rules_guide.md` | business_rules.md の生成指示書（AI 向け） |
 | `ofuda/guides/business_rules_driven_development.md` | この文書。開発手法の設計メモ |
 
