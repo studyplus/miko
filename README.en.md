@@ -169,7 +169,7 @@ miko/
 | `/miko.split-proposal <proposal>` | Splits a proposal into an umbrella (parent) + sub-proposals by phase |
 | `/miko.new-harae <capability>` | First adversarial verification of the business rules. Generates harae.md from scratch |
 | `/miko.harae <capability> [proposal]` | Reviews and extends an existing harae.md. With a proposal, records the findings inside the proposal |
-| `/miko.refine-br <capability> [phase]` | Refactors an existing business_rules.md up to the current standard without changing any judgment: format modernization → safe rewording → split/merge proposals → cross-capability checks, with a confirmation gate after each phase |
+| `/miko.refine-br <capability> [proposal]` | Drafts a refactoring proposal that brings an existing business_rules.md up to the current standard without changing any judgment: format modernization → safe rewording → splits/merges → cross-capability checks, with a confirmation gate after each phase. Pass the proposal back to apply it |
 
 ### Implementation (standard flow)
 
@@ -284,18 +284,25 @@ Changes that do not alter business-rule text (renames, moves, redistributing res
 
 An existing `business_rules.md` is never brought up to the current standard unless you explicitly ask for the migration. `/miko.refine-br` is that entry point. It **never changes a domain judgment** — only the wording and the placement.
 
+**Every change becomes a proposal.** While drafting, business_rules.md is never touched: the per-phase confirmations vanish with the session, and only the proposal remains as a record.
+
 ```
 /miko.refine-br <capability>
   → Phase A: format modernization (policy section, 2.1/2.2 split, numbering comments)
   → Phase B: safe rewording (removing code vocabulary and rationale, moving ADRs to the HLD)
-  → Phase C: split/merge proposals (rule IDs move here; you decide the ID mapping)
+  → Phase C: splits and merges (rule IDs move here; you decide the ID mapping)
   → Phase D: cross-capability checks (boundaries, duplication, homonyms, ownership — detection only)
-  → Record: when rule text or IDs moved, records the applied refactoring as a proposal
-     (also where rationale and rejected alternatives removed from the rule text go)
+  → Delivers a single refactoring proposal (also where rationale removed from rule text goes)
 
-/miko.refine-br <capability> C
-  → Resume from a later phase (you may stop at any confirmation gate)
+# Optional
+/miko.harae <capability> <proposal>
+  → Recommended when the proposal contains splits or merges
+
+/miko.refine-br <capability> <proposal>
+  → Applies the proposal to business_rules.md and remaps the references in harae.md
 ```
+
+You can stop at any confirmation gate. business_rules.md is untouched until you apply, so just start over next time — there is no per-phase resume mechanism.
 
 Anything that would change a judgment (rules that contradict the implementation, rules that need deleting) is routed to `/miko.propose`.
 
