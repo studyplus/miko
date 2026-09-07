@@ -146,7 +146,7 @@ miko の原則として BR ルール本文の変更には proposal が必要。p
 
 #### 横断概念の書き込み時検査（lint）
 
-business_rules.md を更新した場合、`.miko/guides/business_rules_guide.md` の「書き込み時の検査（lint）」を実行する（orphan `xc:` 参照・宣言 ID の重複・宣言行とタグの書式）。問題があれば修正し、修正できないものは主さまに報告する。BR を更新しない実行ではスキップする。
+business_rules.md を更新した場合、`.miko/guides/business_rules_guide.md` の「書き込み時の検査（lint）」を実行する（orphan `xc:` 参照・`[横断]` マークとマーカーの整合・横断カテゴリとタグの書式）。問題があれば修正し、修正できないものは主さまに報告する。BR を更新しない実行ではスキップする。
 
 #### 実装マッピングの横断更新（Sonnet サブエージェント）
 

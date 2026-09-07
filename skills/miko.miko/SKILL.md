@@ -171,9 +171,9 @@ miko の実装フローでは **constitution**（`.specify/memory/constitution.m
 
 6. **「複数のケイパビリティに効くルールはどこに書く？」「これって横断概念？」**
    - `business_rules_guide.md` の「判定テスト: 横断概念か」（他者性・全称性・必達性）を一緒に適用する
-   - 3 問すべて Yes → オーナーの BR に宣言（`/miko.propose` 経由）、効果は各ケイパビリティのルールに `[xc:…]` タグ付きで書く
+   - 3 問すべて Yes → オーナーの BR で概念のカテゴリに `[横断]` マークを付ける（`/miko.propose` 経由）。効果は各ケイパビリティのルールに `[xc:…]` タグ付きで書く
    - 相手を列挙できる二者間の依存 → 境界セクションで足りる（横断概念にしない）
-   - 現在の宣言一覧は `grep -n 'cross-concept' miko/*/business_rules.md`、特定の概念の全体像（宣言 + 適用ルール）は `grep -n 'xc:{cap}/{slug}' miko/*/business_rules.md` で提示する
+   - 現在の宣言一覧は `grep -n 'cross-concept' miko/*/business_rules.md`、特定の概念の全体像（宣言 + 適用ルール）は `grep -n 'xc:{cap}/{プレフィックス}' miko/*/business_rules.md` で提示する
 
 7. **「constitution に何を書けばいい？」「CLAUDE.md に書くのと何が違う？」**
    - 実装フローで毎回守ってほしいプロジェクト固有のルール → constitution
