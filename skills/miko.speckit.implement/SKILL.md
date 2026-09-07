@@ -143,7 +143,7 @@ tasks.md の最終フェーズに到達したら、以下の順序で実行す�
 - 今回の実装で作成・変更したファイルを元に、該当ルールの実装マッピング（`<details>` 内）を更新する
 - 既存ルールでも実装場所が変わったものがあれば更新する
 - **spec.md の Miko コンテキストに複数ケイパビリティのサブプロポーザルが含まれている場合:** 各サブプロポーザルの BR 変更セクションに従って、各ケイパビリティの `miko/<capability>/business_rules.md` をそれぞれ更新する
-- **横断概念の書き込み時検査（lint）:** 更新した各 business_rules.md に対して、`.miko/guides/business_rules_guide.md` の「書き込み時の検査（lint）」を実行する（orphan `xc:` 参照・`[横断]` マークとマーカーの整合・横断カテゴリとタグの書式）。問題があれば修正し、修正できないものはステップ 6 の確認で主さまに報告する
+- **横断カテゴリの書き込み時検査（lint）:** 更新した各 business_rules.md に対して、`.miko/guides/business_rules_guide.md` の「書き込み時の検査（lint）」を実行する（orphan `xc:` 参照・`[横断]` マークとマーカーの整合・横断カテゴリとタグの書式）。問題があれば修正し、修正できないものはステップ 6 の確認で主さまに報告する
 
 **3. high_level_design.md の更新**
 - 今回の実装で構造に変更があった場合、`miko/<capability>/high_level_design.md` を更新する

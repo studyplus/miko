@@ -144,7 +144,7 @@ miko の原則として BR ルール本文の変更には proposal が必要。p
 - proposal がある場合のみ: proposal の新設・改訂・廃止を BR 本文に適用する
 - proposal がない場合: BR 本文は一切触らない（スコープガード (d) で除外済みのはず）
 
-#### 横断概念の書き込み時検査（lint）
+#### 横断カテゴリの書き込み時検査（lint）
 
 business_rules.md を更新した場合、`.miko/guides/business_rules_guide.md` の「書き込み時の検査（lint）」を実行する（orphan `xc:` 参照・`[横断]` マークとマーカーの整合・横断カテゴリとタグの書式）。問題があれば修正し、修正できないものは主さまに報告する。BR を更新しない実行ではスキップする。
 
