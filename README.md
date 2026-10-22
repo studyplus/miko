@@ -4,7 +4,7 @@
 
 <img src="./logos/miko.png" width="200px">
 
-ビジネスルールドリブン開発のための [Claude Code](https://docs.anthropic.com/en/docs/claude-code) スキルセットでございます。ビジネスルールドリブン開発は一般的な用語ではなく、miko で定義した開発手法になります。
+ビジネスルールドリブン開発のための [Agent Skills](https://agentskills.io/) 形式のスキルセットでございます。ビジネスルールドリブン開発は一般的な用語ではなく、miko で定義した開発手法になります。
 
 名前の由来は巫女。神社で神と人の間を取り持つ巫女のように、miko は、主さまと AI がドメイン知識を共有する基盤をお作りいたします。
 
@@ -46,12 +46,12 @@ miko はドキュメントを**ケイパビリティ単位**で整理いたし�
 
 ### その他の設計判断
 
-- **speckit はお調べの道具** — speckit の成果物は使い捨て。重い変更のとき、Claude に深くコードを読ませるための仕掛けとして使います。普段の実装は `/miko.quick-impl` で speckit を通さず行います
+- **speckit はお調べの道具** — speckit の成果物は使い捨て。重い変更のとき、AI に深くコードを読ませるための仕掛けとして使います。普段の実装は `/miko.quick-impl` で speckit を通さず行います
 - **ドキュメントの役割分担** — ルールそのもの（結論）は `business_rules.md` に、なぜそう決めたか（経緯）は proposals に書きます
 
 ## 🌿 前提
 
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) がインストール済みであること
+- [Agent Skills](https://agentskills.io/) に対応した AI コーディングエージェント（Claude Code、Codex など）をお使いであること
 - （Optional）[speckit](https://github.com/github/spec-kit) スキル — フルフロー（`/miko.speckit.*`）をお使いの場合のみ必要でございます。基本フローの `/miko.quick-impl` だけなら不要です
 
 ## ✨ インストール

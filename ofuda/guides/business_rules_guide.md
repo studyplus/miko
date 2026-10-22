@@ -37,7 +37,7 @@
 
 | ドキュメント | 配置 | 目的 |
 |---|---|---|
-| speckit 成果物 | `specs/<feature>/` | Claude に徹底調査させる道具。git commit しない |
+| speckit 成果物 | `specs/<feature>/` | AI に徹底調査させる道具。git commit しない |
 
 ---
 
@@ -72,7 +72,7 @@
 
    重い変更（複数の意図が絡む、影響範囲の見極めに探索が要る、処理構造が大きく動く）は speckit フロー:
    /miko.speckit.specify → /miko.speckit.clarify → /miko.speckit.plan → /miko.speckit.tasks → /miko.speckit.analyze → /miko.speckit.implement
-   → speckit の成果物は使い捨て。Claude に深く調査させるための道具
+   → speckit の成果物は使い捨て。AI に深く調査させるための道具
    → 大きな変更はフェーズ分割可能（親 proposal + サブ proposal）。各サブ proposal に対して実行する
 
 4. 実装後にドキュメントを更新（自動）

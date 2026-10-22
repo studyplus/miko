@@ -4,7 +4,7 @@
 
 <img src="./logos/miko.png" width="200px">
 
-A [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skill set for Business-Rules-Driven Development. "Business-Rules-Driven Development" is not an established industry term — it is the development methodology defined by miko.
+An [Agent Skills](https://agentskills.io/) skill set for Business-Rules-Driven Development. "Business-Rules-Driven Development" is not an established industry term — it is the development methodology defined by miko.
 
 The name comes from *miko* (巫女), the shrine maiden who mediates between gods and people at a Shinto shrine. In the same spirit, miko builds a foundation where Nushi-sama (主さま — that's you) and AI share domain knowledge.
 
@@ -46,12 +46,12 @@ Organizing by capability gathers related business rules in one place, which make
 
 ### Other design decisions
 
-- **speckit is a surveying tool** — speckit artifacts are disposable. For heavy changes, we use speckit as a device to make Claude read the codebase deeply. Day-to-day implementation goes through `/miko.quick-impl`, without speckit
+- **speckit is a surveying tool** — speckit artifacts are disposable. For heavy changes, we use speckit as a device to make the AI read the codebase deeply. Day-to-day implementation goes through `/miko.quick-impl`, without speckit
 - **Division of labor between documents** — the rules themselves (conclusions) go in `business_rules.md`; why they were decided (history) goes in proposals
 
 ## 🌿 Prerequisites
 
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) is installed
+- An AI coding agent that supports [Agent Skills](https://agentskills.io/) (e.g. Claude Code, Codex)
 - (Optional) The [speckit](https://github.com/github/spec-kit) skills — needed only if you use the full flow (`/miko.speckit.*`). Not required for the standard `/miko.quick-impl` flow
 
 ## ✨ Installation
