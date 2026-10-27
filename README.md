@@ -4,7 +4,7 @@
 
 <img src="./logos/miko.png" width="200px">
 
-ビジネスルールドリブン開発のための [Claude Code](https://docs.anthropic.com/en/docs/claude-code) スキルセットでございます。ビジネスルールドリブン開発は一般的な用語ではなく、miko で定義した開発手法になります。
+ビジネスルールドリブン開発のための [Agent Skills](https://agentskills.io/) 形式のスキルセットでございます。[Claude Code](https://docs.anthropic.com/en/docs/claude-code) をはじめ、Agent Skills に対応した AI コーディングエージェントでお使いいただけます。ビジネスルールドリブン開発は一般的な用語ではなく、miko で定義した開発手法になります。
 
 名前の由来は巫女。神社で神と人の間を取り持つ巫女のように、miko は、主さまと AI がドメイン知識を共有する基盤をお作りいたします。
 
@@ -46,12 +46,13 @@ miko はドキュメントを**ケイパビリティ単位**で整理いたし�
 
 ### その他の設計判断
 
-- **speckit はお調べの道具** — speckit の成果物は使い捨て。重い変更のとき、Claude に深くコードを読ませるための仕掛けとして使います。普段の実装は `/miko.quick-impl` で speckit を通さず行います
+- **speckit はお調べの道具** — speckit の成果物は使い捨て。重い変更のとき、AI に深くコードを読ませるための仕掛けとして使います。普段の実装は `/miko.quick-impl` で speckit を通さず行います
 - **ドキュメントの役割分担** — ルールそのもの（結論）は `business_rules.md` に、なぜそう決めたか（経緯）は proposals に書きます
 
 ## 🌿 前提
 
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) がインストール済みであること
+- [Agent Skills](https://agentskills.io/) 形式のスキルを読み込める AI コーディングエージェント（[Claude Code](https://docs.anthropic.com/en/docs/claude-code) など）がインストール済みであること
+- （アップグレード時のみ）[Claude Code](https://docs.anthropic.com/en/docs/claude-code) の CLI（`claude`）— アップグレード時のマイグレーション実行に使います
 - （Optional）[speckit](https://github.com/github/spec-kit) スキル — フルフロー（`/miko.speckit.*`）をお使いの場合のみ必要でございます。基本フローの `/miko.quick-impl` だけなら不要です
 
 ## ✨ インストール
@@ -62,7 +63,7 @@ miko はドキュメントを**ケイパビリティ単位**で整理いたし�
 bash <(curl -fsSL https://raw.githubusercontent.com/studyplus/miko/main/install.sh)
 ```
 
-`.claude/skills/` にスキルファイルが配置されます。
+`.claude/skills/` にスキルファイルが配置されます（プロジェクトのルートに `.claude` ディレクトリが必要です）。
 
 インストール時に出力言語（日本語 / English）の選択を求められます。選択した言語は `.miko/config` に保存され、miko の対話と生成ドキュメントがその言語に統一されます。プロンプトを省略したい場合は環境変数で指定できます。
 
@@ -94,7 +95,7 @@ rm -rf .claude/skills/miko.* .claude/skills/miko-* .miko   # 削除して再イ�
 bash <(curl -fsSL https://raw.githubusercontent.com/studyplus/miko/main/upgrade.sh)
 ```
 
-スキルファイルの更新に加え、`miko/` 配下のドキュメント（BR・HLD 等）に必要なマイグレーションを自動で実行いたします。
+スキルファイルの更新に加え、`miko/` 配下のドキュメント（BR・HLD 等）に必要なマイグレーションを自動で実行いたします。マイグレーションの実行には `claude` CLI が必要です。
 
 ### カスタムスキルのプロテクト
 

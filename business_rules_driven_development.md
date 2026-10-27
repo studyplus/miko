@@ -32,7 +32,7 @@ SDD（Specification-Driven Development）を試した結果、以下の問題に
 
 ### speckit の位置づけ
 
-speckit は SDD のためではなく、**Claude に丁寧にコードベースを調査させるための仕掛け**として使っている。speckit を通すと Claude はかなり深くコードを読むので、直接「実装して」と言うより品質が上がる。speckit の成果物自体は使い捨てで、git commit しない。
+speckit は SDD のためではなく、**AI に丁寧にコードベースを調査させるための仕掛け**として使っている。speckit を通すと AI はかなり深くコードを読むので、直接「実装して」と言うより品質が上がる。speckit の成果物自体は使い捨てで、git commit しない。
 
 ---
 
@@ -68,7 +68,7 @@ speckit は SDD のためではなく、**Claude に丁寧にコードベース�
 
 | ドキュメント | 配置 | 目的 |
 |---|---|---|
-| speckit 成果物 | `specs/<feature>/` | Claude に徹底調査させる道具。git commit しない |
+| speckit 成果物 | `specs/<feature>/` | AI に徹底調査させる道具。git commit しない |
 
 ---
 
@@ -102,7 +102,7 @@ speckit は SDD のためではなく、**Claude に丁寧にコードベース�
    - 基本: /miko.quick-impl（speckit を通さず直接実装）
    - 重い変更: speckit で仕様策定・実装
      /speckit.specify → /speckit.clarify → /speckit.plan → /speckit.tasks → /speckit.analyze → /speckit.implement
-     - speckit の成果物は使い捨て。Claude に深く調査させるための道具
+     - speckit の成果物は使い捨て。AI に深く調査させるための道具
    - 実装後にドキュメントを更新
      - business_rules.md を更新（proposal の「ビジネスルールの変更」を反映）
      - high_level_design.md を更新（構造に変更があった場合のみ）

@@ -4,7 +4,7 @@
 
 <img src="./logos/miko.png" width="200px">
 
-A [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skill set for Business-Rules-Driven Development. "Business-Rules-Driven Development" is not an established industry term — it is the development methodology defined by miko.
+A skill set in the [Agent Skills](https://agentskills.io/) format for Business-Rules-Driven Development. It works with [Claude Code](https://docs.anthropic.com/en/docs/claude-code) and other AI coding agents that support Agent Skills. "Business-Rules-Driven Development" is not an established industry term — it is the development methodology defined by miko.
 
 The name comes from *miko* (巫女), the shrine maiden who mediates between gods and people at a Shinto shrine. In the same spirit, miko builds a foundation where Nushi-sama (主さま — that's you) and AI share domain knowledge.
 
@@ -46,12 +46,13 @@ Organizing by capability gathers related business rules in one place, which make
 
 ### Other design decisions
 
-- **speckit is a surveying tool** — speckit artifacts are disposable. For heavy changes, we use speckit as a device to make Claude read the codebase deeply. Day-to-day implementation goes through `/miko.quick-impl`, without speckit
+- **speckit is a surveying tool** — speckit artifacts are disposable. For heavy changes, we use speckit as a device to make the AI read the codebase deeply. Day-to-day implementation goes through `/miko.quick-impl`, without speckit
 - **Division of labor between documents** — the rules themselves (conclusions) go in `business_rules.md`; why they were decided (history) goes in proposals
 
 ## 🌿 Prerequisites
 
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) is installed
+- An AI coding agent that can load [Agent Skills](https://agentskills.io/)-format skills (such as [Claude Code](https://docs.anthropic.com/en/docs/claude-code)) is installed
+- (Upgrades only) The [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI (`claude`) — used to run migrations during upgrades
 - (Optional) The [speckit](https://github.com/github/spec-kit) skills — needed only if you use the full flow (`/miko.speckit.*`). Not required for the standard `/miko.quick-impl` flow
 
 ## ✨ Installation
@@ -62,7 +63,7 @@ Run the following at your project root.
 bash <(curl -fsSL https://raw.githubusercontent.com/studyplus/miko/main/install.sh)
 ```
 
-The skill files are placed under `.claude/skills/`.
+The skill files are placed under `.claude/skills/` (a `.claude` directory must exist at your project root).
 
 The installer asks you to choose an output language (日本語 / English). Your choice is saved to `.miko/config`, and miko's conversation and generated documents are unified in that language. To skip the prompt, set an environment variable:
 
@@ -94,7 +95,7 @@ To update an existing miko installation to the latest version, run the following
 bash <(curl -fsSL https://raw.githubusercontent.com/studyplus/miko/main/upgrade.sh)
 ```
 
-Besides updating the skill files, this automatically runs any migrations needed for the documents under `miko/` (business rules, high-level designs, etc.).
+Besides updating the skill files, this automatically runs any migrations needed for the documents under `miko/` (business rules, high-level designs, etc.). Running migrations requires the `claude` CLI.
 
 ### Protecting custom skills
 
