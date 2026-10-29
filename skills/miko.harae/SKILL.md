@@ -1,5 +1,5 @@
 ---
-description: 既存の harae.md を棚卸し・差分探索する。proposal 付きの場合は proposal 内に検証結果を記録する。
+description: ビジネスルールの攻撃的検証。harae.md がなければ初回検証として生成し、あれば棚卸し・差分探索する。proposal 付きの場合は proposal 内に検証結果を記録する。
 ---
 
 ## 入力
@@ -10,58 +10,123 @@ $ARGUMENTS
 
 入力の形式: `<capability_name>` または `<capability_name> <proposal_path>`
 
-- 例: `/miko.harae order_management`（現行 BR を再検証）
+- 例: `/miko.harae order_management`（現行 BR を検証。harae.md がなければ初回検証、あれば再検証）
 - 例: `/miko.harae order_management miko/order_management/proposals/2026-03-08-cancel-email.md`（proposal 適用後の BR を検証）
 - 空の場合はエラー: 「⛩️  ケイパビリティ名をお願いいたします（例: `/miko.harae order_management`）」
 
-**`miko/<capability>/harae.md` が存在しない場合はエラー:**
+**`miko/<capability>/business_rules.md` が存在しない場合はエラー:**
 
-> ⛩️  `miko/<capability>/harae.md` が見つかりません。
-> まず `/miko.new-harae <capability>` で初回検証を行ってください。
+> ⛩️  `miko/<capability>/business_rules.md` が見つかりません。
+> まず `/miko.new-cap <capability>` でケイパビリティを定義してください。
 
-**proposal が指定されていない場合:**
+**`miko/<capability>/harae.md` が存在しない場合:** エラーにせず、一言お知らせして初回モードを実行する。
 
-```
-⛩️  何を検証いたしましょうか？
+> ⛩️  `miko/<capability>/harae.md` がまだございませんので、初回検証として全件をお調べいたします。
 
-1. 現行の business_rules.md を再検証する
-2. proposal を適用した状態で検証する（proposal のパスをお願いいたします）
-```
+**proposal が指定されていない場合:** 確認せず、現行の business_rules.md を検証する（harae.md の有無でモードが決まる）。
 
 ---
 
 ## このスキルの役割
 
-既存の harae.md を起点に、ビジネスルールの検証を継続する。
+ビジネスルールの定義自体に欠陥がないかを攻撃的に検証する。harae.md がなければ初回検証として新規生成し、あれば既存の harae.md を起点に検証を継続する。
 
 **「問題ないことの確認」ではなく「問題の発見」に全振りしたスキル。** 問題が見つからなければ成果物はゼロ。
 
 **成果物:**
-- proposal なしの場合: `miko/<capability>/harae.md` を更新する
+- proposal なしの場合: `miko/<capability>/harae.md` を生成（なければ）または更新する
 - proposal 付きの場合: **proposal ファイル内に「祓え検証」セクションを追記する。harae.md は更新しない。** proposal はまだ確定していないため、harae.md への永続化は実装完了時（miko.speckit.implement / miko.quick-impl）に行う
 
 **検証の6軸:** `.miko/guides/harae_guide.md` に定義された6軸（内部矛盾・不完全性・境界の曖昧さ・時間軸の破綻・ビジネス毀損・悪用耐性）で検証する。proposal 付きの場合は6軸に加えて「既存への影響（proposal の変更で既存の本番エンティティが意図せず壊れないか）」も検証する。
 
 **使用タイミング:**
+- `/miko.new-cap` 後 — 定義したルールの初回検証
 - `/miko.propose` 後 — proposal 適用後のルール体系を検証
 - 任意のタイミング — 既存ルールの健全性チェック
 
 **フローでの位置づけ:**
 
 ```
+/miko.new-cap → ルール定義
+/miko.harae <capability> → 初回: ルールの弱点を探す（harae.md を生成）／2回目以降: 棚卸し・差分探索
 /miko.propose → proposal 作成
 /miko.harae <capability> <proposal> → proposal 適用後のルールを検証
-→ OK なら speckit フローへ
+→ OK なら実装フローへ
 ```
 
 ---
 
 ## モード判定
 
-| proposal | モード |
-|---|---|
-| なし | **再実行モード** — 棚卸し + 差分探索 |
-| あり | **proposal 検証モード** — proposal を仮想適用して検証。**指摘は proposal に追記し、harae.md は更新しない** |
+| harae.md | proposal | モード |
+|---|---|---|
+| なし | なし | **初回モード** — harae.md をゼロから生成 |
+| あり | なし | **再実行モード** — 棚卸し + 差分探索 |
+| あり | あり | **proposal 検証モード** — proposal を仮想適用して検証。**指摘は proposal に追記し、harae.md は更新しない** |
+| なし | あり | **初回モード → proposal 検証モード** — 先に現行 BR を初回モードで検証して harae.md を生成し、続けて proposal 検証モードを実行する |
+
+「proposal に祓え検証があるなら harae.md は必ず存在する」という前提を保つため、harae.md がない状態で proposal 検証モードだけを行うことはしない。
+
+---
+
+## 初回モード
+
+harae.md が存在しない場合。現行の business_rules.md を攻撃的に検証し、`miko/<capability>/harae.md` を新規生成する。
+
+**検証の6軸:** `.miko/guides/harae_guide.md` に定義された6軸（内部矛盾・不完全性・境界の曖昧さ・時間軸の破綻・ビジネス毀損・悪用耐性）で検証する。
+
+**harae.md のフォーマット・ステータス管理:** `.miko/guides/harae_format_guide.md` に従う。
+
+### 1. 資料の読み込み
+
+- `.miko/guides/tone_guide.md` — 対話スタイル。**このファイルの口調・絵文字・出力言語ルールに従うこと**
+- `.miko/guides/harae_format_guide.md` — harae.md のフォーマットとステータス管理ルール
+- `miko/<capability>/business_rules.md`
+- `miko/<capability>/high_level_design.md` — あれば
+- `miko/glossary.md` — あれば
+
+### 2. 攻撃的検証（サブエージェント並列）
+
+3つのサブエージェントを並列で起動する。
+
+**各サブエージェントに渡す情報:**
+- `.miko/guides/harae_guide.md` のパス — 「このファイルの自分の担当セクション（A / B / C）を読み、その指示に正確に従え」と指示する
+- `miko/<capability>/business_rules.md` のパス
+- `miko/<capability>/high_level_design.md` のパス（あれば）
+- `miko/glossary.md` のパス（あれば）
+- 担当の識別子: `A`, `B`, `C`
+
+| サブエージェント | 担当軸 | 共通する視点 |
+|---|---|---|
+| A | 内部矛盾 + 不完全性 | ルール体系の論理的整合性 |
+| B | 境界の曖昧さ + 時間軸の破綻 | ルールの精度と堅牢性 |
+| C | ビジネス毀損 + 悪用耐性 | ルール通りでも結果がまずい |
+
+各サブエージェントは **指摘リストのみ** 返す。問題が見つからなければ「指摘なし」。
+
+### 3. 結果統合・ファイル生成
+
+サブエージェントの結果を統合し、重複を排除して `harae.md` を生成する。
+
+**指摘がない場合も `harae.md` を生成する。** 指摘一覧テーブルは空にし、詳細セクションに「6軸すべてで指摘事項なし」と記載する。
+
+### 4. 対話
+
+指摘について主さまと対話し、対処を決める。
+
+- **ルール修正が必要** → 軽微であれば business_rules.md の修正案を直接提示する。大きな変更であれば proposal の作成を提案する。対処後、該当指摘のステータスを `resolved` に更新し、解決内容を記録する
+- **問題なしと判断** → ステータスを `dismissed` に更新し、却下理由を記録する
+- **追加調査が必要** → コードを確認して追加情報を提供
+
+対話の結果を harae.md に反映する。
+
+**指摘がない場合はこのステップをスキップする。**
+
+### 5. 完了
+
+指摘数とステータス内訳（resolved/dismissed/open）をサマリーテーブルで提示する。open があれば `/miko.harae` による再検証をお勧めする。
+
+**proposal 付きで呼ばれた場合:** ここでは完了とせず、proposal 検証モードに進む（サマリーは proposal 検証モードの完了時にまとめて提示してよい）。
 
 ---
 
@@ -115,7 +180,7 @@ proposal が指定されていない場合。メインセッションで棚卸�
 
 ## proposal 検証モード
 
-proposal が指定されている場合。proposal を仮想適用した BR を検証し、**指摘は proposal に追記する。harae.md は更新しない。**
+proposal が指定されている場合（harae.md がなければ、先に初回モードを完了させてから開始する）。proposal を仮想適用した BR を検証し、**指摘は proposal に追記する。harae.md は更新しない。**
 
 proposal はまだ確定していないため、harae.md への永続化は実装完了時に行う（miko.speckit.implement / miko.quick-impl のデザインドキュメント更新ステップで harae.md に転記される）。
 

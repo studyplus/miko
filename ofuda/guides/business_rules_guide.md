@@ -49,8 +49,8 @@
 /miko.new-cap <capability>
   → 対話しながら business_rules.md + high_level_design.md を作成
 
-/miko.new-harae <capability>
-  → 初回の攻撃的検証。harae.md を生成（推奨）
+/miko.harae <capability>
+  → 初回の攻撃的検証。harae.md がなければ生成（推奨）
 
 → 指摘を修正したら /miko.harae <capability> で再検証をお勧めする
 ```
