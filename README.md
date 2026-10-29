@@ -139,7 +139,7 @@ miko/
 | `glossary.md` | 用語の定義（ケイパビリティごとのセクションで整理。セクションは配置の軸で、見出し語はシステム全体で一意） | miko がメンテ |
 | `business_rules.md` | ドメインの判断基準。コードからは読み取れない「なぜ」を記録 | miko がメンテ |
 | `high_level_design.md` | ケイパビリティの構造と全体像 | miko がメンテ |
-| `harae.md` | 攻撃的検証の指摘リストとステータス管理 | `/miko.new-harae` が生成、`/miko.harae` が更新 |
+| `harae.md` | 攻撃的検証の指摘リストとステータス管理 | `/miko.harae` が生成・更新 |
 | `proposals/` | ケイパビリティへの変更提案と経緯 | 主さまが元ネタを出し、miko と相談しながら書く |
 
 ## ⛩️  スキル一覧
@@ -167,8 +167,7 @@ miko/
 | `/miko.quick-catchup <capability> [diff]` | コード変更（git diff / PR）から proposal を作成し BR/HLD を更新。緊急 FIX 後などに |
 | `/miko.propose <capability> [元ネタ]` | 変更プロポーザルを対話しながら作成 |
 | `/miko.split-proposal <proposal>` | プロポーザルを親（umbrella）+ サブにフェーズ分割 |
-| `/miko.new-harae <capability>` | ビジネスルールの初回攻撃的検証。harae.md をゼロから生成 |
-| `/miko.harae <capability> [proposal]` | 既存 harae.md の棚卸し・差分探索。proposal 付きなら proposal 内に検証結果を記録 |
+| `/miko.harae <capability> [proposal]` | ビジネスルールの攻撃的検証。harae.md がなければ初回検証として生成し、あれば棚卸し・差分探索。proposal 付きなら proposal 内に検証結果を記録 |
 
 ### 実装（基本フロー）
 
@@ -204,8 +203,8 @@ speckit がインストールされている場合のみ使えます。
 /miko.new-cap <capability>
   → 対話しながら business_rules.md + high_level_design.md を作成
 
-/miko.new-harae <capability>
-  → 定義したルールの矛盾・穴を攻撃的に検証。harae.md を生成
+/miko.harae <capability>
+  → 定義したルールの矛盾・穴を攻撃的に検証。harae.md がなければ生成
 
 → 指摘を修正したら /miko.harae <capability> で再検証をお勧めする
 ```

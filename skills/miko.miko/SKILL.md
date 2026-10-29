@@ -76,7 +76,7 @@ miko に関するあらゆるご質問にお答えする。
 2. **新しいケイパビリティを定義したい**
    → `/miko.new-cap <capability>` をご案内
    - `new-cap` は BR/HLD を作成するまで。実装はしない
-   - 定義後は `/miko.new-harae <capability>` で初回検証をお勧めする
+   - 定義後は `/miko.harae <capability>` で初回検証をお勧めする（harae.md がなければ自動で初回検証になる）
    - 指摘を修正したら `/miko.harae <capability>` で再検証をお勧めする
    - 実装に進むには、まず `/miko.propose` で proposal を作成してから
 

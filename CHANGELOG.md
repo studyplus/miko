@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.6.0 (2026-10-29)
+
+### Changed
+
+- **`/miko.new-harae` を廃止し `/miko.harae` に統合** — 「初回は new-harae、2回目以降は harae」の使い分けが毎回の手間になっていたため。`/miko.harae <capability>` は harae.md がなければ確認なしで初回モード（旧 new-harae と同じ、サブエージェント3体による6軸の並列検証で harae.md を生成）を実行し、あれば従来どおり再実行モード（棚卸し + 差分探索）になる。harae.md がない状態で proposal 付きで呼ばれた場合は、先に初回モードで現行 BR を検証して harae.md を生成してから proposal 検証モードに進む（「proposal に祓え検証があるなら harae.md は必ず存在する」という前提を保つため、`/miko.quick-impl`・`/miko.speckit.implement` の harae.md への転記処理は変更なし）。`/miko.new-cap`・`/miko.miko`・`business_rules_guide.md`・README の案内を `/miko.harae` に差し替えた。既存インストールはアップグレード時に `miko.new-harae` が削除候補として確認される
+
 ## v1.5.1 (2026-09-17)
 
 ### Changed
