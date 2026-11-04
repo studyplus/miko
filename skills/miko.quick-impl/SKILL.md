@@ -152,14 +152,16 @@ business_rules.md を更新した場合、`.miko/guides/business_rules_guide.md`
 
 実装の変更がどの cap の実装マッピングに波及したかを機械的にチェック・更新する。
 
-まず主さまにベースブランチ名を確認する（例: 「このブランチのベースブランチ（マージ先）を教えてくださいませ」）。自動推定はしない。
+比較基準を決める:
+- 現在のブランチが `main` / `master` の場合は確認しない。マージ先は自明なので、upstream（`git rev-parse --abbrev-ref @{upstream}`、なければ `HEAD`）を比較基準とする。差分は `git diff <基準>`（未 push コミット + 未コミット変更）で取る
+- それ以外のブランチでは、主さまにベースブランチ名を確認する（例: 「このブランチのベースブランチ（マージ先）を教えてくださいませ」）。自動推定はしない
 
 Sonnet サブエージェント（Agent ツール、model: "sonnet"）を起動して実行する。
 
 サブエージェントに渡す情報:
 - `.miko/guides/cross_capability_mapping_guide.md` のパス — 「このファイルを読み、指示に従え」と指示する
 - メインケイパビリティ名 — proposal がある場合のみ渡す（proposal がない場合は渡さず、全 cap スキャンにする）
-- 主さまに確認したベースブランチ名
+- 比較基準（主さまに確認したベースブランチ名、または `main` / `master` 上での upstream / `HEAD`）。`main` / `master` 上であることも併せて伝える
 
 #### high_level_design.md の更新
 
