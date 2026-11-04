@@ -49,7 +49,7 @@ miko フローを通さずに入ったコード変更（緊急 FIX 等）を、�
 - diff ソースを特定:
   - `#数字` → PR として `gh pr diff` で取得
   - `A..B` や `HEAD~N..HEAD` → git range として `git diff` で取得
-  - 省略 → 主さまにベースブランチ名を確認し（例: 「ベースブランチ（マージ先）を教えてくださいませ」）、そこからの diff を使用。自動推定はしない
+  - 省略 → 現在のブランチが `main` / `master` の場合は確認せず、upstream（`git rev-parse --abbrev-ref @{upstream}`、なければ `HEAD`）に対する `git diff <基準>`（未 push コミット + 未コミット変更）を使用。それ以外のブランチでは主さまにベースブランチ名を確認し（例: 「ベースブランチ（マージ先）を教えてくださいませ」）、そこからの diff を使用。自動推定はしない
 
 **読み込むファイル:**
 - `.miko/guides/business_rules_guide.md` — ルールの書き方、判定テスト
