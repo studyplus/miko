@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.6.1 (2026-11-04)
+
+### Changed
+
+- **`main` / `master` 上ではベースブランチの確認を省略** — マージ先が自明なのに `/miko.quick-impl`・`/miko.quick-catchup`・`/miko.speckit.implement` で毎回ベースブランチを聞かれるのが手間だったため。現在のブランチが `main` / `master` の場合は確認せず、upstream（なければ `HEAD`）を比較基準にして `git diff <基準>`（未 push コミット + 未コミット変更）で差分を取る。`...HEAD` 形式だと `main` 上では差分が常に空になるため、`cross_capability_mapping_guide.md` も `main` / `master` 上では `...HEAD` を付けない形に対応させた。feature ブランチでは従来どおり確認し、自動推定はしない。実装後すぐ push して upstream と `HEAD` が一致すると差分が空になる点に注意
+
 ## v1.6.0 (2026-10-29)
 
 ### Changed
