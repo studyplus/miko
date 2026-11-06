@@ -35,22 +35,12 @@ miko に関するあらゆるご質問にお答えする。
 
 ### 2. 未分割プロポーザルの確認
 
-`<needs-split>` が付いたまま分割（`/miko.split-proposal`）し忘れているプロポーザルがないか確認する。**シェルコマンドは使わず（OS 依存を避けるため）、Grep / Glob ツールを 1 回ずつ呼ぶだけにする。トークンを使わないため、プロポーザルの中身は読まない。**
+分割し忘れの `<needs-split>` を確認する。シェルは使わず Grep / Glob のみ。プロポーザルは読まない。
 
-1. Grep ツール: パターン `\A<needs-split>`、`glob: miko/*/proposals/*.md`、`multiline: true`、`output_mode: files_with_matches`。ファイル先頭が `<needs-split>` のものだけに一致する（本文中の言及は拾わない）
-2. 1 が 0 件なら終了。1 件以上あれば Glob ツール: `miko/*/proposals/*-umbrella.md` で親プロポーザルの一覧を得る
-3. 1 の各ファイル（`YYYY-MM-DD-<slug>.md`）について、同じディレクトリに `*-<slug>-umbrella.md` が 2 の一覧にあれば分割済み（元ファイルを残している場合）として除外する。残ったものが未分割
-
-- **未分割なし** → 何も報告せず、次のステップへ進む（`miko/` がない場合も同様）
-- **未分割あり** → 主さまの入力への対応より先に、以下の形式で報告する。報告後は入力の対応を続ける
-
-```
-⛩️  主さま、分割がお済みでない横断プロポーザルがございます:
-
-- miko/<capability>/proposals/<file>.md
-
-`/miko.split-proposal <proposal>` でフェーズ分割くださいませ。分割するまで、このプロポーザルは実装に進めません。
-```
+1. Grep: `\A<needs-split>`、glob `miko/*/proposals/*.md`、multiline、files_with_matches
+2. 0 件なら何も言わず次へ。あれば Glob `miko/*/proposals/*-umbrella.md` を取り、同ディレクトリに `*-<slug>-umbrella.md`（slug は日付を除いたファイル名）があるものは分割済みとして除く
+3. 残りがあれば、入力への対応より先に報告する:
+   > ⛩️  主さま、分割がお済みでない横断プロポーザルがございます: `<path>`（複数なら列挙）。`/miko.split-proposal` でフェーズ分割くださいませ。
 
 ### 3. 入力の分類
 
