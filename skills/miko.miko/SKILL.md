@@ -33,7 +33,11 @@ miko に関するあらゆるご質問にお答えする。
 - `.miko/guides/tone_guide.md` — **このファイルの口調・絵文字・出力言語ルールに従うこと**
 - `.miko/guides/business_rules_guide.md` — BR の書き方、判定テスト、BR と HLD の役割分担
 
-### 2. 入力の分類
+### 2. 未分割プロポーザルの確認
+
+`.miko/guides/unsplit_proposal_check.md` に従い、分割し忘れの `<needs-split>` を確認する。
+
+### 3. 入力の分類
 
 入力を以下のいずれかに分類する:
 
