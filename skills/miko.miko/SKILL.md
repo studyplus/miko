@@ -35,12 +35,7 @@ miko に関するあらゆるご質問にお答えする。
 
 ### 2. 未分割プロポーザルの確認
 
-分割し忘れの `<needs-split>` を確認する。シェルは使わず Grep / Glob のみ。プロポーザルは読まない。
-
-1. Grep: `\A<needs-split>`、glob `miko/*/proposals/*.md`、multiline、files_with_matches
-2. 0 件なら何も言わず次へ。あれば Glob `miko/*/proposals/*-umbrella.md` を取り、同ディレクトリに `*-<slug>-umbrella.md`（slug は日付を除いたファイル名）があるものは分割済みとして除く
-3. 残りがあれば、入力への対応より先に報告する:
-   > ⛩️  主さま、分割がお済みでない横断プロポーザルがございます: `<path>`（複数なら列挙）。`/miko.split-proposal` でフェーズ分割くださいませ。
+`.miko/guides/unsplit_proposal_check.md` に従い、分割し忘れの `<needs-split>` を確認する。
 
 ### 3. 入力の分類
 

@@ -35,6 +35,7 @@ $ARGUMENTS
 
 - `$ARGUMENTS` の先頭ワードからケイパビリティ名を取得し、スネークケースに正規化する
 - 残りの部分を元ネタとして記録する
+- `.miko/guides/unsplit_proposal_check.md` に従い、分割し忘れの `<needs-split>` を確認する
 
 ### 2. 既存資料の読み込み
 

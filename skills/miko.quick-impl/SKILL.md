@@ -49,6 +49,8 @@ miko の原則として BR ルール本文の変更には proposal が必要。p
   > ⛩️  このプロポーザルは分割が必要です。
   > まず `/miko.split-proposal` でフェーズ分割してから、サブプロポーザルを指定してください。
 
+**他の未分割プロポーザルの確認:** `.miko/guides/unsplit_proposal_check.md` に従い、分割し忘れの `<needs-split>` を確認する。
+
 ### 2. 資料読み込み
 
 **共通:**
