@@ -33,7 +33,30 @@ miko に関するあらゆるご質問にお答えする。
 - `.miko/guides/tone_guide.md` — **このファイルの口調・絵文字・出力言語ルールに従うこと**
 - `.miko/guides/business_rules_guide.md` — BR の書き方、判定テスト、BR と HLD の役割分担
 
-### 2. 入力の分類
+### 2. 未分割プロポーザルの確認
+
+`<needs-split>` が付いたまま分割（`/miko.split-proposal`）し忘れているプロポーザルがないか確認する。**トークンを使わないため、下のコマンドを 1 回実行するだけにする。プロポーザルの中身は読まない。**
+
+```bash
+awk 'FNR==1 && /^<needs-split>/ {print FILENAME}' miko/*/proposals/*.md 2>/dev/null | while read -r f; do
+  b=$(basename "$f" .md)
+  compgen -G "$(dirname "$f")/*-${b#????-??-??-}-umbrella.md" >/dev/null || echo "$f"
+done
+```
+
+- 先頭行が `<needs-split>` のプロポーザルのうち、同じディレクトリに対応する親プロポーザル（`*-<slug>-umbrella.md`）がないものを列挙する。分割済みで元ファイルを残しているものは出力されない
+- **出力なし** → 何も報告せず、次のステップへ進む（`miko/` がない場合も同様）
+- **出力あり** → 主さまの入力への対応より先に、以下の形式で報告する。報告後は入力の対応を続ける
+
+```
+⛩️  主さま、分割がお済みでない横断プロポーザルがございます:
+
+- miko/<capability>/proposals/<file>.md
+
+`/miko.split-proposal <proposal>` でフェーズ分割くださいませ。分割するまで、このプロポーザルは実装に進めません。
+```
+
+### 3. 入力の分類
 
 入力を以下のいずれかに分類する:
 
