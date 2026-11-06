@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.6.2 (2026-11-06)
+
+### New
+
+- **`/miko.miko`・`/miko.propose` の冒頭で、分割し忘れの `<needs-split>` プロポーザルを報告** — `<needs-split>` が付いた横断プロポーザルを `/miko.split-proposal` で分割し忘れても、そのプロポーザルを実装しようとするまで気づけなかったため。確認手順は新しい共通ガイド `ofuda/guides/unsplit_proposal_check.md`（インストール後は `.miko/guides/`）にまとめた。`miko/*/proposals/*.md` のうちファイル先頭が `<needs-split>` のものを検索し（本文中の言及は対象外）、同じ slug の `*-umbrella.md` が同じディレクトリにあるもの（分割済みで元ファイルを残しているもの）を除いて、残りがあれば `/miko.split-proposal` を案内する。0 件なら何も報告しない。プロポーザルの中身は読まず、検索結果もパスのみのため、1 回あたり 700〜1,000 トークン程度（概算）。シェルコマンドは使わず、Claude Code では Grep / Glob ツール、Codex では `rg` で実行するため、bash のない環境でも動く想定。検索に失敗した場合は「0 件」とせず確認できなかった旨を報告する。`/miko.propose` で実行するのは、慣れたユーザーが `/miko.miko` を呼ばずに直接 propose に進むため（`<needs-split>` を付与するのも propose）。`/miko.quick-impl` には入れない — 指定したプロポーザルが未分割なら従来どおり入力検証で中止されるため。SessionStart フックは `.claude/settings.json` の書き換えとシェル依存が必要になるため採用しなかった
+
 ## v1.6.1 (2026-11-04)
 
 ### Changed
