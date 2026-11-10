@@ -51,6 +51,8 @@ miko フローを通さずに入ったコード変更（緊急 FIX 等）を、�
   - `A..B` や `HEAD~N..HEAD` → git range として `git diff` で取得
   - 省略 → 現在のブランチが `main` / `master` の場合は確認せず、upstream（`git rev-parse --abbrev-ref @{upstream}`、なければ `HEAD`）に対する `git diff <基準>`（未 push コミット + 未コミット変更）を使用。それ以外のブランチでは主さまにベースブランチ名を確認し（例: 「ベースブランチ（マージ先）を教えてくださいませ」）、そこからの diff を使用。自動推定はしない
 
+**再読み込みの省略:** `.miko/` 配下のガイド・サンプルは、このセッションで全文を読み込み済みで、その全文が現在のコンテキストに残っていれば読み直さない。要約しか残っていない（コンテキストが圧縮・要約された後など）、または確信が持てなければ読み直す。`miko/` 配下のプロジェクト文書は対象外で、毎回読み込む。
+
 **読み込むファイル:**
 - `.miko/guides/business_rules_guide.md` — ルールの書き方、判定テスト
 - `.miko/guides/tone_guide.md` — 対話スタイル。**このファイルの口調・絵文字・出力言語ルールに従うこと**
@@ -110,7 +112,7 @@ diff ソース、変更の要約、ビジネスルールへの影響（新設/�
 ### 7. proposal 適用（business_rules.md 更新）
 
 **読み込み:**
-- `.miko/examples/business_rules.md` — 品質基準
+- `.miko/examples/business_rules.md` — 品質基準（ステップ 2 の「再読み込みの省略」に従う）
 
 **ステップ 6 で生成した proposal の内容を business_rules.md に反映する。**
 - proposal の新設・改訂を適用する
@@ -121,7 +123,7 @@ diff ソース、変更の要約、ビジネスルールへの影響（新設/�
 
 ### 8. high_level_design.md 更新
 
-- `.miko/examples/high_level_design.md` — 品質基準として読み込む
+- `.miko/examples/high_level_design.md` — 品質基準として読み込む（ステップ 2 の「再読み込みの省略」に従う）
 - 構造に変更があった場合のみ更新する
 
 **更新内容を提示し、主さまの確認を取る。**
