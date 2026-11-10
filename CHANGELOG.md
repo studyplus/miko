@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.6.4 (2026-11-10)
+
+### Changed
+
+- **読み込み済みのガイド・サンプルを読み直さない** — 1 セッションで複数のスキルを続けて使うと、同じ `business_rules_guide.md`・`tone_guide.md`・`examples/` を各スキルがその都度読み直し、コンテキストを消費していたため（例: `/miko.propose` → `/miko.harae` → `/miko.quick-impl` で `business_rules_guide.md` を 3 回読む指示になっていた）。`.miko/` 配下のガイド・サンプルは、同じセッションで全文を読み込み済みで、その全文がコンテキストに残っていれば読み直さないようにした。要約しか残っていない場合（コンテキストの圧縮・要約後など）や確信が持てない場合は、従来どおり読み直す。`miko/` 配下のプロジェクト文書（business_rules.md・proposal 等）はセッション中に書き換わるため対象外で、従来どおり毎回読み込む。サブエージェントは親のコンテキストを持たないため、サブエージェント向けガイドの読み込みも従来どおり。対象スキル: `/miko.propose`・`/miko.new-cap`・`/miko.catchup`・`/miko.quick-catchup`・`/miko.quick-impl`・`/miko.speckit.implement`・`/miko.harae`・`/miko.split-proposal`・`/miko.miko`・`/miko.omikuji`・`/miko.setup`・`/miko.catchup-system-hld`
+
 ## v1.6.3 (2026-11-06)
 
 ### Changed
