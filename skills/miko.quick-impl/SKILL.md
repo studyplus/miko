@@ -52,7 +52,8 @@ miko の原則として BR ルール本文の変更には proposal が必要。p
 ### 2. 資料読み込み
 
 **共通:**
-- `.miko/guides/business_rules_guide.md` — ルールの書き方、実装マッピングの表記規約
+- `.miko/guides/business_rules_guide.md` — ルールの書き方
+- `.miko/guides/implementation_mapping_guide.md` — 実装マッピングの表記規約
 - `.miko/guides/tone_guide.md` — 対話スタイル。**このファイルの口調・絵文字・出力言語ルールに従うこと**
 - `miko/system_high_level_design.md` — コード探索ガイド
 - `miko/glossary.md` — 用語集（存在する場合）
@@ -133,7 +134,8 @@ miko の原則として BR ルール本文の変更には proposal が必要。p
 ### 7. デザインドキュメントの更新
 
 **読み込み:**
-- `.miko/guides/business_rules_guide.md` — ルールの書き方、実装マッピングの形式
+- `.miko/guides/business_rules_guide.md` — ルールの書き方
+- `.miko/guides/implementation_mapping_guide.md` — 実装マッピングの形式
 - `.miko/examples/business_rules.md` — 品質基準
 - `.miko/examples/high_level_design.md` — 品質基準
 
@@ -146,7 +148,7 @@ miko の原則として BR ルール本文の変更には proposal が必要。p
 
 #### 横断カテゴリの書き込み時検査（lint）
 
-business_rules.md を更新した場合、`.miko/guides/business_rules_guide.md` の「書き込み時の検査（lint）」を実行する（orphan `xc:` 参照・`[横断]` マークとマーカーの整合・横断カテゴリとタグの書式）。問題があれば修正し、修正できないものは主さまに報告する。BR を更新しない実行ではスキップする。
+business_rules.md を更新した場合、`.miko/guides/cross_category_guide.md` の「書き込み時の検査（lint）」を実行する（更新したファイルに `xc:`・`[横断]`・`cross-category` のいずれも含まれなければ不要）（orphan `xc:` 参照・`[横断]` マークとマーカーの整合・横断カテゴリとタグの書式）。問題があれば修正し、修正できないものは主さまに報告する。BR を更新しない実行ではスキップする。
 
 #### 実装マッピングの横断更新（Sonnet サブエージェント）
 

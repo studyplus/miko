@@ -174,7 +174,7 @@ miko の実装フローでは **constitution**（`.specify/memory/constitution.m
    - すべて `miko/glossary.md` に定義する（BR には用語集セクションを持たない）
 
 6. **「複数のケイパビリティに効くルールはどこに書く？」「これって横断カテゴリ？」**
-   - `business_rules_guide.md` の「判定テスト: 横断カテゴリにすべきか」（他者性・全称性・必達性）を一緒に適用する
+   - `.miko/guides/cross_category_guide.md` を読み、「判定テスト: 横断カテゴリにすべきか」（他者性・全称性・必達性）を一緒に適用する
    - 3 問すべて Yes → オーナーの BR で概念のカテゴリに `[横断]` マークを付ける（`/miko.propose` 経由）。効果は各ケイパビリティのルールに `[xc:…]` タグ付きで書く
    - 相手を列挙できる二者間の依存 → 境界セクションで足りる（横断カテゴリにしない）
    - 現在の宣言一覧は `grep -n 'cross-category' miko/*/business_rules.md`、特定の概念の全体像（宣言 + 適用ルール）は `grep -n 'xc:{cap}/{プレフィックス}' miko/*/business_rules.md` で提示する

@@ -43,6 +43,7 @@ $ARGUMENTS
 
 **指示書（必須）:**
 - `.miko/guides/business_rules_guide.md` — ルール記述の原則。判定テストの方法
+- `.miko/guides/cross_category_guide.md` — 変更が横断カテゴリ（`[横断]` / `[xc:…]`）に触れる場合、または横断カテゴリの昇格候補を扱う場合のみ読む
 - `.miko/guides/tone_guide.md` — ユーザーとの対話スタイル。**このファイルの口調・絵文字・出力言語ルールに従うこと**
 
 **実例（品質の基準）:**

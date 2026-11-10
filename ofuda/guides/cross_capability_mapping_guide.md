@@ -9,7 +9,7 @@
 
 ## 表記規約
 
-実装マッピングは `.miko/guides/business_rules_guide.md` の「表記規約」セクションに従った表記で記録されている。検索クエリもこの表記に合わせて組み立てる必要がある。
+実装マッピングは `.miko/guides/implementation_mapping_guide.md` の「表記規約」セクションに従った表記で記録されている。検索クエリもこの表記に合わせて組み立てる必要がある。
 
 ## 手順
 
@@ -25,7 +25,7 @@
 
 ### 2. 表記規約に従った検索クエリを組み立てる
 
-ステップ 1 の結果を、`.miko/guides/business_rules_guide.md` の表記規約に従った形式に変換する。
+ステップ 1 の結果を、`.miko/guides/implementation_mapping_guide.md` の表記規約に従った形式に変換する。
 
 ### 3. 実装マッピングを検索
 

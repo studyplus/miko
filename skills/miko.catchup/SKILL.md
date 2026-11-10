@@ -43,6 +43,7 @@ $ARGUMENTS
 
 **指示書（必須）:**
 - `.miko/guides/business_rules_guide.md` — business_rules.md の生成ルール。**このファイルの指示に厳密に従うこと**
+- `.miko/guides/implementation_mapping_guide.md` — 実装マッピングの書き方・表記規約
 - `.miko/guides/tone_guide.md` — ユーザーとの対話スタイル。**このファイルの口調・絵文字・出力言語ルールに従うこと**
 
 **システム全体の文脈:**
@@ -161,7 +162,7 @@ $ARGUMENTS
 - 承認された削除
 - 実装マッピング
 - 操作の定義（コードから新しい操作が見つかった場合）
-- **横断カテゴリの書き込み時検査（lint）** — 更新後、`.miko/guides/business_rules_guide.md` の「書き込み時の検査（lint）」を実行する（orphan `xc:` 参照・`[横断]` マークとマーカーの整合・横断カテゴリとタグの書式）。問題があれば修正し、修正できないものは主さまに報告する
+- **横断カテゴリの書き込み時検査（lint）** — 更新後、`.miko/guides/cross_category_guide.md` の「書き込み時の検査（lint）」を実行する（更新したファイルに `xc:`・`[横断]`・`cross-category` のいずれも含まれなければ不要）（orphan `xc:` 参照・`[横断]` マークとマーカーの整合・横断カテゴリとタグの書式）。問題があれば修正し、修正できないものは主さまに報告する
 
 **glossary.md の更新:**
 - proposal で新しい用語が登場した場合は `miko/glossary.md` に追加する（ファイルがなければ作成）

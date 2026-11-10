@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.7.0 (2026-11-10)
+
+### Optimized
+
+- **`business_rules_guide.md` を分割・圧縮し、スキルが毎回読み込む量を減らした（約1.95万字 → 約8.7千字）** — 主要スキル（`/miko.catchup`・`/miko.new-cap`・`/miko.propose`・`/miko.quick-impl`・`/miko.quick-catchup`・`/miko.speckit.implement`・`/miko.miko`）と禊の審査役サブエージェントが毎回ガイド全体を読んでおり、1 回の読み込み量の 4〜5 割を占めていたため。また Claude Code はコンパクション後に読み直すファイルを 5,000 トークン以下のものに限るため、大きすぎるガイドはコンパクション後にパスしか残らなかった。次のように整理した:
+  - 横断カテゴリ（判定テスト・ID・宣言/適用の書き方・非適用・書き込み時 lint）を新しい `ofuda/guides/cross_category_guide.md` に分離。宣言済みの横断カテゴリがある場合、横断カテゴリに触れる変更・昇格候補を扱う場合、更新した BR に `xc:`・`[横断]`・`cross-category` が含まれる場合にだけ読む。lint は該当がなければ不要とした
+  - 実装マッピングの置き場所・表記規約を新しい `ofuda/guides/implementation_mapping_guide.md` に分離。マッピングを書くスキル（catchup・quick-catchup・new-cap・quick-impl・speckit.implement・`cross_capability_mapping_guide.md`）だけが読む
+  - BR の書き方と関係の薄い「ドキュメント体系」「開発フロー」を削除（README と `/miko.miko` のスキル案内が担う）。成果物の役割分担（BR / HLD / proposal / glossary）だけを短い表で残した
+  - 重複していた「アンチパターン」「書かないもの」「良い例・悪い例」と、「各セクションの指針」の再説明をまとめた。判定テスト・語彙規律・粒度・ポリシー・ドキュメント構造・生成モードの規定内容は変えていない
+
 ## v1.6.3 (2026-11-06)
 
 ### Changed
