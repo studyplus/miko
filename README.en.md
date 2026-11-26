@@ -51,7 +51,7 @@ Organizing by capability gathers related business rules in one place, which make
 
 ## 🌿 Prerequisites
 
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) is installed
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) or [Codex](https://github.com/openai/codex) is installed (miko works with either)
 - (Optional) The [speckit](https://github.com/github/spec-kit) skills — needed only if you use the full flow (`/miko.speckit.*`). Not required for the standard `/miko.quick-impl` flow
 
 ## ✨ Installation

@@ -51,7 +51,7 @@ miko はドキュメントを**ケイパビリティ単位**で整理いたし�
 
 ## 🌿 前提
 
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) がインストール済みであること
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) または [Codex](https://github.com/openai/codex) がインストール済みであること（どちらでも miko を利用できます）
 - （Optional）[speckit](https://github.com/github/spec-kit) スキル — フルフロー（`/miko.speckit.*`）をお使いの場合のみ必要でございます。基本フローの `/miko.quick-impl` だけなら不要です
 
 ## ✨ インストール
