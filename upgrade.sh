@@ -3,9 +3,13 @@ set -euo pipefail
 
 REPO="studyplus/miko"
 BRANCH="main"
-SKILLS_DIR=".claude/skills"
 VERSION_FILE=".miko/VERSION"
-OLD_VERSION_FILE="$SKILLS_DIR/_miko/VERSION"
+OLD_VERSION_FILE=".claude/skills/_miko/VERSION"
+
+# 配置先の検出: Claude Code は .claude/skills、Codex は .agents/skills
+SKILLS_DIRS=()
+[ -d ".claude" ] && SKILLS_DIRS+=(".claude/skills")
+[ -d ".agents" ] && SKILLS_DIRS+=(".agents/skills")
 
 # 言語設定: .miko/config の language (ja/en) を読む。なければ ja
 LANG_CHOICE="ja"
@@ -42,20 +46,30 @@ say() {
   if [ "$LANG_CHOICE" = "en" ]; then echo "$2"; else echo "$1"; fi
 }
 
-if [ ! -d ".claude" ]; then
-  say "⛩️  .claude ディレクトリが見つかりません。プロジェクトのルートで実行くださいませ。" \
-      "⛩️  .claude directory not found. Please run this from your project root."
+if [ ${#SKILLS_DIRS[@]} -eq 0 ]; then
+  say "⛩️  .claude / .agents ディレクトリが見つかりません。プロジェクトのルートで実行くださいませ。" \
+      "⛩️  .claude / .agents directory not found. Please run this from your project root."
   exit 1
 fi
 
-if ! command -v claude &> /dev/null; then
-  say "⛩️  claude (Claude CLI) が必要です。https://claude.com/claude-code からインストールくださいませ。" \
-      "⛩️  claude (Claude CLI) is required. Please install it from https://claude.com/claude-code."
+# マイグレーション実行用の CLI: claude を優先し、なければ codex を使う
+if command -v claude &> /dev/null; then
+  AGENT_CLI="claude"
+elif command -v codex &> /dev/null; then
+  AGENT_CLI="codex"
+else
+  say "⛩️  claude (Claude Code) または codex (Codex) の CLI が必要です。" \
+      "⛩️  The claude (Claude Code) or codex (Codex) CLI is required."
   exit 1
 fi
 
 # miko がインストールされているか確認（VERSION ファイルまたは miko スキルの存在）
-if [ ! -f "$VERSION_FILE" ] && [ ! -f "$OLD_VERSION_FILE" ] && ! ls -d "$SKILLS_DIR"/miko.* &> /dev/null && ! ls -d "$SKILLS_DIR"/miko-* &> /dev/null; then
+installed=false
+if [ -f "$VERSION_FILE" ] || [ -f "$OLD_VERSION_FILE" ]; then installed=true; fi
+for d in "${SKILLS_DIRS[@]}"; do
+  if ls -d "$d"/miko.* &> /dev/null || ls -d "$d"/miko-* &> /dev/null; then installed=true; fi
+done
+if [ "$installed" = false ]; then
   say "⛩️  miko がインストールされていません。install.sh で初回インストールをお願いいたします。" \
       "⛩️  miko is not installed. Please run install.sh for the initial installation."
   exit 1
@@ -128,7 +142,14 @@ if [ ${#migration_files[@]} -gt 0 ]; then
     prompt=$(cat "$f" | sed "s|\$MIKO_LATEST|$tmpdir/miko|g")
     # Bash はマイグレーション内に書かれたシェルスクリプトの実行用
     # < /dev/null: claude がスクリプトの stdin（後続の確認プロンプト用の入力）を消費しないようにする
-    if ! claude -p "$prompt" --allowedTools "Edit,Read,Write,Glob,Grep,Bash" < /dev/null; then
+    if [ "$AGENT_CLI" = "claude" ]; then
+      run_ok=true
+      claude -p "$prompt" --allowedTools "Edit,Read,Write,Glob,Grep,Bash" < /dev/null || run_ok=false
+    else
+      run_ok=true
+      codex exec --full-auto "$prompt" < /dev/null || run_ok=false
+    fi
+    if [ "$run_ok" = false ]; then
       say "  ❌ $ts でエラーが発生しました。中断いたします。" \
           "  ❌ Migration $ts failed. Aborting."
       exit 1
@@ -139,136 +160,139 @@ if [ ${#migration_files[@]} -gt 0 ]; then
   echo ""
 fi
 
-# 旧ディレクトリの削除（v0.2.x 以前からの移行）
-if [ -d "$SKILLS_DIR/_miko" ]; then
-  say "🌿 旧ディレクトリ $SKILLS_DIR/_miko を削除しております..." \
-      "🌿 Removing the legacy directory $SKILLS_DIR/_miko..."
-  rm -rf "$SKILLS_DIR/_miko"
-fi
-
-# 最新版に存在する miko.* スキル名（正規名、. 区切り）を収集
-latest_skills=()
-for d in "$tmpdir"/miko/skills/miko.*/; do
-  [ -d "$d" ] || continue
-  latest_skills+=("$(basename "$d")")
-done
-
-# .miko/protected_skills からプロテクト対象スキルを読み込む
-# フォーマット: 1行1スキル名（# で始まる行はコメント、空行は無視）
-PROTECTED_SKILLS_FILE=".miko/protected_skills"
-protected_skills=()
-if [ -f "$PROTECTED_SKILLS_FILE" ]; then
-  while IFS= read -r line; do
-    [[ -z "$line" || "$line" == \#* ]] && continue
-    protected_skills+=("$line")
-  done < "$PROTECTED_SKILLS_FILE"
-fi
-
-if [ ${#protected_skills[@]} -gt 0 ]; then
-  echo ""
-  say "🔒 以下のスキルはプロテクト済みのため、更新対象から除外いたします:" \
-      "🔒 The following skills are protected and will be excluded from the update:"
-  for s in "${protected_skills[@]}"; do
-    echo "    - $SKILLS_DIR/$s"
-  done
-fi
-
-# is_protected <name> — protected_skills に含まれるか判定するヘルパー
-# 空配列の展開は bash 3.2 の set -u でエラーになるため、先に件数を確認する
-is_protected() {
-  local name="$1"
-  [ ${#protected_skills[@]} -eq 0 ] && return 1
-  for p in "${protected_skills[@]}"; do
-    [ "$p" = "$name" ] && return 0
-  done
-  return 1
-}
-
-# 最新版にないローカルの miko スキルのうち、プロテクト済みでないものを削除候補として収集
-# ローカルのスキル名は設定された区切り文字なので、正規名を to_local で変換して比較する
-removed_skills=()
-for d in "$SKILLS_DIR"/miko"$SEP"*/; do
-  [ -d "$d" ] || continue
-  name=$(basename "$d")
-  is_protected "$name" && continue
-  found=false
-  for s in "${latest_skills[@]}"; do
-    [ "$(to_local "$s")" = "$name" ] && found=true && break
-  done
-  [ "$found" = false ] && removed_skills+=("$name")
-done
-
-# 削除されるスキルがあれば一覧表示して確認
-if [ ${#removed_skills[@]} -gt 0 ]; then
-  echo ""
-  say "🗑️  以下のスキルは最新版にないため削除されます:" \
-      "🗑️  The following skills are not in the latest version and will be removed:"
-  for s in "${removed_skills[@]}"; do
-    echo "    - $SKILLS_DIR/$s"
-  done
-  echo ""
-  if [ "$LANG_CHOICE" = "en" ]; then
-    read -r -p "Continue? [y/N]: " ans
-  else
-    read -r -p "続行してよろしいですか? [y/N]: " ans
+# 検出したスキル配置先（.claude/skills, .agents/skills）ごとに更新する
+for SKILLS_DIR in "${SKILLS_DIRS[@]}"; do
+  # 旧ディレクトリの削除（v0.2.x 以前からの移行）
+  if [ -d "$SKILLS_DIR/_miko" ]; then
+    say "🌿 旧ディレクトリ $SKILLS_DIR/_miko を削除しております..." \
+        "🌿 Removing the legacy directory $SKILLS_DIR/_miko..."
+    rm -rf "$SKILLS_DIR/_miko"
   fi
-  case "$ans" in
-    y|Y|yes|YES) ;;
-    *)
-      say "中断いたしました。" "Aborted."
-      exit 1
-      ;;
-  esac
-fi
 
-# スキルファイル更新
-say "🌿 スキルファイルを更新しております..." \
-    "🌿 Updating skill files..."
-
-# 削除が確定したスキルを個別に削除
-if [ ${#removed_skills[@]} -gt 0 ]; then
-  for s in "${removed_skills[@]}"; do
-    rm -rf "${SKILLS_DIR:?}/$s"
+  # 最新版に存在する miko.* スキル名（正規名、. 区切り）を収集
+  latest_skills=()
+  for d in "$tmpdir"/miko/skills/miko.*/; do
+    [ -d "$d" ] || continue
+    latest_skills+=("$(basename "$d")")
   done
-fi
 
-# miko 管理スキルを個別に更新（プロテクト済みはスキップ）
-# 配置先はローカル名（設定された区切り文字）
-for s in "${latest_skills[@]}"; do
-  local_name=$(to_local "$s")
-  if is_protected "$local_name"; then
-    say "  🔒 $local_name はプロテクト済みのためスキップいたします" \
-        "  🔒 $local_name is protected — skipping"
-    continue
+  # .miko/protected_skills からプロテクト対象スキルを読み込む
+  # フォーマット: 1行1スキル名（# で始まる行はコメント、空行は無視）
+  PROTECTED_SKILLS_FILE=".miko/protected_skills"
+  protected_skills=()
+  if [ -f "$PROTECTED_SKILLS_FILE" ]; then
+    while IFS= read -r line; do
+      [[ -z "$line" || "$line" == \#* ]] && continue
+      protected_skills+=("$line")
+    done < "$PROTECTED_SKILLS_FILE"
   fi
-  rm -rf "${SKILLS_DIR:?}/$local_name"
-  cp -r "$tmpdir/miko/skills/$s" "$SKILLS_DIR/$local_name"
-done
 
-# .miko/ を更新: ユーザー作成ファイル（protected_skills, config 等）を保持したまま上書き
-# rm -rf は使わず、ofuda の中身を .miko/ にマージコピーする
-cp -r "$tmpdir/miko/ofuda/." .miko/
+  if [ ${#protected_skills[@]} -gt 0 ]; then
+    echo ""
+    say "🔒 以下のスキルはプロテクト済みのため、更新対象から除外いたします:" \
+        "🔒 The following skills are protected and will be excluded from the update:"
+    for s in "${protected_skills[@]}"; do
+      echo "    - $SKILLS_DIR/$s"
+    done
+  fi
 
-# 言語設定に応じて tone_guide を解決する（config がない既存インストールは ja として config を作成）
-if [ ! -f ".miko/config" ]; then
-  echo "language=$LANG_CHOICE" > .miko/config
-fi
-if [ "$LANG_CHOICE" = "en" ] && [ -f ".miko/guides/tone_guide.en.md" ]; then
-  cp .miko/guides/tone_guide.en.md .miko/guides/tone_guide.md
-fi
-rm -f .miko/guides/tone_guide.en.md
+  # is_protected <name> — protected_skills に含まれるか判定するヘルパー
+  # 空配列の展開は bash 3.2 の set -u でエラーになるため、先に件数を確認する
+  is_protected() {
+    local name="$1"
+    [ ${#protected_skills[@]} -eq 0 ] && return 1
+    for p in "${protected_skills[@]}"; do
+      [ "$p" = "$name" ] && return 0
+    done
+    return 1
+  }
 
-# ハイフン区切りの場合、更新したファイル内のスキル名参照を書き換える
-# プロテクト済みスキルはユーザー管理のため書き換えない
-if [ "$SEP" != "." ]; then
-  rewrite_paths=(.miko)
+  # 最新版にないローカルの miko スキルのうち、プロテクト済みでないものを削除候補として収集
+  # ローカルのスキル名は設定された区切り文字なので、正規名を to_local で変換して比較する
+  removed_skills=()
+  for d in "$SKILLS_DIR"/miko"$SEP"*/; do
+    [ -d "$d" ] || continue
+    name=$(basename "$d")
+    is_protected "$name" && continue
+    found=false
+    for s in "${latest_skills[@]}"; do
+      [ "$(to_local "$s")" = "$name" ] && found=true && break
+    done
+    [ "$found" = false ] && removed_skills+=("$name")
+  done
+
+  # 削除されるスキルがあれば一覧表示して確認
+  if [ ${#removed_skills[@]} -gt 0 ]; then
+    echo ""
+    say "🗑️  以下のスキルは最新版にないため削除されます:" \
+        "🗑️  The following skills are not in the latest version and will be removed:"
+    for s in "${removed_skills[@]}"; do
+      echo "    - $SKILLS_DIR/$s"
+    done
+    echo ""
+    if [ "$LANG_CHOICE" = "en" ]; then
+      read -r -p "Continue? [y/N]: " ans
+    else
+      read -r -p "続行してよろしいですか? [y/N]: " ans
+    fi
+    case "$ans" in
+      y|Y|yes|YES) ;;
+      *)
+        say "中断いたしました。" "Aborted."
+        exit 1
+        ;;
+    esac
+  fi
+
+  # スキルファイル更新
+  say "🌿 スキルファイルを更新しております..." \
+      "🌿 Updating skill files..."
+
+  # 削除が確定したスキルを個別に削除
+  if [ ${#removed_skills[@]} -gt 0 ]; then
+    for s in "${removed_skills[@]}"; do
+      rm -rf "${SKILLS_DIR:?}/$s"
+    done
+  fi
+
+  # miko 管理スキルを個別に更新（プロテクト済みはスキップ）
+  # 配置先はローカル名（設定された区切り文字）
   for s in "${latest_skills[@]}"; do
     local_name=$(to_local "$s")
-    is_protected "$local_name" && continue
-    rewrite_paths+=("$SKILLS_DIR/$local_name")
+    if is_protected "$local_name"; then
+      say "  🔒 $local_name はプロテクト済みのためスキップいたします" \
+          "  🔒 $local_name is protected — skipping"
+      continue
+    fi
+    rm -rf "${SKILLS_DIR:?}/$local_name"
+    cp -r "$tmpdir/miko/skills/$s" "$SKILLS_DIR/$local_name"
   done
-  rewrite_skill_refs "${rewrite_paths[@]}"
-fi
+
+  # .miko/ を更新: ユーザー作成ファイル（protected_skills, config 等）を保持したまま上書き
+  # rm -rf は使わず、ofuda の中身を .miko/ にマージコピーする
+  cp -r "$tmpdir/miko/ofuda/." .miko/
+
+  # 言語設定に応じて tone_guide を解決する（config がない既存インストールは ja として config を作成）
+  if [ ! -f ".miko/config" ]; then
+    echo "language=$LANG_CHOICE" > .miko/config
+  fi
+  if [ "$LANG_CHOICE" = "en" ] && [ -f ".miko/guides/tone_guide.en.md" ]; then
+    cp .miko/guides/tone_guide.en.md .miko/guides/tone_guide.md
+  fi
+  rm -f .miko/guides/tone_guide.en.md
+
+  # ハイフン区切りの場合、更新したファイル内のスキル名参照を書き換える
+  # プロテクト済みスキルはユーザー管理のため書き換えない
+  if [ "$SEP" != "." ]; then
+    rewrite_paths=(.miko)
+    for s in "${latest_skills[@]}"; do
+      local_name=$(to_local "$s")
+      is_protected "$local_name" && continue
+      rewrite_paths+=("$SKILLS_DIR/$local_name")
+    done
+    rewrite_skill_refs "${rewrite_paths[@]}"
+  fi
+done
 
 echo ""
 say "✨ miko を $latest_semver ($latest_ts) に更新いたしました" \

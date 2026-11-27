@@ -51,7 +51,7 @@ miko はドキュメントを**ケイパビリティ単位**で整理いたし�
 
 ## 🌿 前提
 
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) がインストール済みであること
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) または [Codex](https://github.com/openai/codex) がインストール済みであること（どちらでも miko を利用できます）
 - （Optional）[speckit](https://github.com/github/spec-kit) スキル — フルフロー（`/miko.speckit.*`）をお使いの場合のみ必要でございます。基本フローの `/miko.quick-impl` だけなら不要です
 
 ## ✨ インストール
@@ -62,7 +62,7 @@ miko はドキュメントを**ケイパビリティ単位**で整理いたし�
 bash <(curl -fsSL https://raw.githubusercontent.com/studyplus/miko/main/install.sh)
 ```
 
-`.claude/skills/` にスキルファイルが配置されます。
+スキルファイルは、プロジェクトにある `.claude/`（Claude Code）と `.agents/`（Codex）のそれぞれの `skills/` 配下に配置されます。Codex のみ使う場合は、事前に `.agents` ディレクトリを作成してください。
 
 インストール時に出力言語（日本語 / English）の選択を求められます。選択した言語は `.miko/config` に保存され、miko の対話と生成ドキュメントがその言語に統一されます。プロンプトを省略したい場合は環境変数で指定できます。
 

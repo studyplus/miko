@@ -51,7 +51,7 @@ Organizing by capability gathers related business rules in one place, which make
 
 ## 🌿 Prerequisites
 
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) is installed
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) or [Codex](https://github.com/openai/codex) is installed (miko works with either)
 - (Optional) The [speckit](https://github.com/github/spec-kit) skills — needed only if you use the full flow (`/miko.speckit.*`). Not required for the standard `/miko.quick-impl` flow
 
 ## ✨ Installation
@@ -62,7 +62,7 @@ Run the following at your project root.
 bash <(curl -fsSL https://raw.githubusercontent.com/studyplus/miko/main/install.sh)
 ```
 
-The skill files are placed under `.claude/skills/`.
+The skill files are placed under `skills/` of each of `.claude/` (Claude Code) and `.agents/` (Codex) that exists in your project. If you use only Codex, create the `.agents` directory beforehand.
 
 The installer asks you to choose an output language (日本語 / English). Your choice is saved to `.miko/config`, and miko's conversation and generated documents are unified in that language. To skip the prompt, set an environment variable:
 
