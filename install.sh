@@ -3,11 +3,16 @@ set -euo pipefail
 
 REPO="studyplus/miko"
 BRANCH="main"
-SKILLS_DIR=".claude/skills"
 
-if [ ! -d ".claude" ]; then
-  echo "⛩️  .claude ディレクトリが見つかりません。プロジェクトのルートで実行くださいませ。"
-  echo "    (.claude directory not found. Please run this from your project root.)"
+# 配置先の検出: Claude Code は .claude/skills、Codex は .agents/skills。
+# 存在するディレクトリ（.claude / .agents）すべてに配置する
+SKILLS_DIRS=()
+[ -d ".claude" ] && SKILLS_DIRS+=(".claude/skills")
+[ -d ".agents" ] && SKILLS_DIRS+=(".agents/skills")
+
+if [ ${#SKILLS_DIRS[@]} -eq 0 ]; then
+  echo "⛩️  .claude / .agents ディレクトリが見つかりません。プロジェクトのルートで実行くださいませ。"
+  echo "    (.claude / .agents directory not found. Please run this from your project root.)"
   exit 1
 fi
 
@@ -78,10 +83,15 @@ trap 'rm -rf "$tmpdir"' EXIT
 mkdir -p "$tmpdir/miko"
 curl -fsSL "https://github.com/$REPO/archive/refs/heads/$BRANCH.tar.gz" | tar -xz -C "$tmpdir/miko" --strip-components=1
 
-mkdir -p "$SKILLS_DIR"
-
 # 既存インストールの確認（VERSION ファイルまたは miko スキルが1つでもあれば既存とみなす）
-if [ -f ".miko/VERSION" ] || ls -d "$SKILLS_DIR"/miko.* &> /dev/null || ls -d "$SKILLS_DIR"/miko-* &> /dev/null; then
+already_installed=false
+[ -f ".miko/VERSION" ] && already_installed=true
+for SKILLS_DIR in "${SKILLS_DIRS[@]}"; do
+  if ls -d "$SKILLS_DIR"/miko.* &> /dev/null || ls -d "$SKILLS_DIR"/miko-* &> /dev/null; then
+    already_installed=true
+  fi
+done
+if [ "$already_installed" = true ]; then
   if [ "$LANG_CHOICE" = "en" ]; then
     echo "⛩️  miko is already installed. Please use upgrade.sh to update:"
   else
@@ -98,8 +108,11 @@ canonical_skills=()
 for d in "$tmpdir"/miko/skills/miko.*/; do
   canonical_skills+=("$(basename "$d")")
 done
-for s in "${canonical_skills[@]}"; do
-  cp -r "$tmpdir/miko/skills/$s" "$SKILLS_DIR/$(to_local "$s")"
+for SKILLS_DIR in "${SKILLS_DIRS[@]}"; do
+  mkdir -p "$SKILLS_DIR"
+  for s in "${canonical_skills[@]}"; do
+    cp -r "$tmpdir/miko/skills/$s" "$SKILLS_DIR/$(to_local "$s")"
+  done
 done
 cp -r "$tmpdir"/miko/ofuda .miko
 
@@ -120,7 +133,10 @@ fi
 rm -f .miko/guides/tone_guide.en.md
 
 # ハイフン区切りの場合、配置済みファイル内のスキル名参照を書き換える
-rewrite_skill_refs .miko "$SKILLS_DIR"/miko"$SEP"*
+rewrite_skill_refs .miko
+for SKILLS_DIR in "${SKILLS_DIRS[@]}"; do
+  rewrite_skill_refs "$SKILLS_DIR"/miko"$SEP"*
+done
 
 if [ ! -f ".miko/protected_skills" ]; then
 cat > .miko/protected_skills << EOF
@@ -136,11 +152,11 @@ EOF
 fi
 
 if [ "$LANG_CHOICE" = "en" ]; then
-  echo "✨ The miko skills have been delivered to: $SKILLS_DIR/"
+  echo "✨ The miko skills have been delivered to: ${SKILLS_DIRS[*]}"
 else
-  echo "✨ miko スキルをお納めいたしました: $SKILLS_DIR/"
+  echo "✨ miko スキルをお納めいたしました: ${SKILLS_DIRS[*]}"
 fi
-ls -1d "$SKILLS_DIR"/miko"$SEP"* .miko 2>/dev/null | while read -r d; do
+ls -1d "${SKILLS_DIRS[0]}"/miko"$SEP"* .miko 2>/dev/null | while read -r d; do
   echo "  - $(basename "$d")"
 done
 echo ""
